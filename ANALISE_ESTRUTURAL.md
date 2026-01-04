@@ -1727,12 +1727,23 @@ Os valores apresentados são estimativas baseadas em:
 - Posicionamento como referência mundial em gov tech
 
 **Cálculo do ROI:**
-- Investimento total: R$ 4-8 milhões (conversão de $760k-1.51M)
-- Economia anual: R$ 770 milhões
-- ROI Ano 1: (770M - 8M) / 8M × 100 = 9.525%
-- ROI 5 anos: (3.850M - 8M) / 8M × 100 = 48.025%
+- Investimento total em 5 fases: R$ 3.8-7.55M
+- Investimento médio considerado: R$ 6M
+- Economia anual após maturação (ano 3+): R$ 770M/ano
+- Economia 5 anos (considerando ramp-up): 
+  - Ano 1: R$ 0 (implementação)
+  - Ano 2: R$ 200M (30% da capacidade)
+  - Ano 3: R$ 500M (65% da capacidade)
+  - Ano 4: R$ 700M (90% da capacidade)
+  - Ano 5: R$ 770M (100% da capacidade)
+  - **Total 5 anos: R$ 2.17B**
+- ROI 5 anos: (2.170M - 6M) / 6M × 100 = **36.067%** (ou retorno de 361x o investimento)
 
-**Nota:** O percentual anterior de 15.000% foi corrigido para refletir cálculo mais conservador e metodologicamente sólido. Os valores reais podem variar significativamente dependendo da escala de implementação e adoção pelos órgãos.
+**Análise de Payback:**
+- Considerando cenário médio, o payback ocorre entre mês 30-36
+- A partir do ano 4, o sistema gera economia líquida de ~R$ 700M/ano
+
+**Nota:** Os valores são estimativas baseadas em implementação em escala federal com participação de múltiplos órgãos. Implementações menores terão economia proporcional. O cenário apresenta premissas conservadoras de adoção gradual (ramp-up de 3 anos) para mitigar riscos de superestimação.
 
 ---
 
@@ -1749,8 +1760,9 @@ Com base na análise custo-benefício, recomenda-se a seguinte abordagem:
 4. Detecção de Fraudes (#2)
 
 **Investimento Ano 1:** $290-560k (R$ 1.45-2.8M)  
-**Economia Anual Esperada:** R$ 770 milhões/ano (após maturação)  
-**ROI Estimado:** 48.025% em 5 anos (conservador)  
+**Economia Anual Esperada:** R$ 770M/ano (após maturação completa - ano 5)  
+**Payback Estimado:** 30-36 meses  
+**ROI 5 anos:** 36.067% (cenário conservador com ramp-up gradual)  
 **Impacto:** Transformador
 
 **Ano 2 - Expansão e Especialização:**
