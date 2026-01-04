@@ -10,6 +10,7 @@ import { MobileWarning } from './MobileWarning';
 import { OnboardingTour } from './OnboardingTour';
 import { Toaster } from '@/components/ui/toaster';
 import { useApp } from '@/contexts/AppContext';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 export function Dashboard() {
   const {
@@ -29,6 +30,9 @@ export function Dashboard() {
     handleFeedback,
     handleExport
   } = useApp();
+  
+  // Enable keyboard shortcuts
+  useKeyboardShortcuts();
 
   return (
     <>

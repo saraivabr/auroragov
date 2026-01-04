@@ -26,9 +26,9 @@ interface AppContextType extends AppState {
   setAuditEntries: (entries: AuditEntry[] | ((prev: AuditEntry[]) => AuditEntry[])) => void;
   setIsLoading: (loading: boolean) => void;
   setPromptValue: (value: string) => void;
-  setShowDocumentWorkspace: (show: boolean) => void;
-  setShowComparisonMode: (show: boolean) => void;
-  setShowOnboarding: (show: boolean) => void;
+  setShowDocumentWorkspace: (show: boolean | ((prev: boolean) => boolean)) => void;
+  setShowComparisonMode: (show: boolean | ((prev: boolean) => boolean)) => void;
+  setShowOnboarding: (show: boolean | ((prev: boolean) => boolean)) => void;
   addAuditEntry: (action: string, details: string, model?: AIModel) => void;
   handleSendMessage: (content: string) => Promise<void>;
   handleModelChange: (model: AIModel) => void;

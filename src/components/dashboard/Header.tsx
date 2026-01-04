@@ -2,6 +2,7 @@ import { Shield, Clock, CheckCircle2, HelpCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
+import { KeyboardShortcutsHelp } from './KeyboardShortcutsHelp';
 
 export function Header() {
   const { setShowOnboarding } = useApp();
@@ -30,15 +31,19 @@ export function Header() {
 
           {/* Security Badge */}
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={restartTour}
-              className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
-              title="Revisar Tutorial"
-            >
-              <HelpCircle className="w-4 h-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <KeyboardShortcutsHelp />
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={restartTour}
+                className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+                title="Revisar Tutorial"
+              >
+                <HelpCircle className="w-4 h-4" />
+              </Button>
+            </div>
             
             <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg glass-effect">
               <Shield className="w-4 h-4 text-cyan-400" />

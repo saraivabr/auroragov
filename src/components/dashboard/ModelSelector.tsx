@@ -9,17 +9,17 @@ interface ModelSelectorProps {
 
 export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorProps) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" role="region" aria-label="Seletor de Modelo de IA">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+        <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider" id="model-selector-title">
           Modelo de IA
         </h3>
-        <Badge variant="secondary" className="text-xs">
+        <Badge variant="secondary" className="text-xs" aria-label={`Especialidade atual: ${AI_MODELS[selectedModel].specialty}`}>
           {AI_MODELS[selectedModel].specialty}
         </Badge>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby="model-selector-title">
         {(Object.keys(AI_MODELS) as AIModel[]).map((modelId) => {
           const model = AI_MODELS[modelId];
           const isSelected = selectedModel === modelId;
@@ -28,6 +28,9 @@ export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorPro
             <button
               key={modelId}
               onClick={() => onModelChange(modelId)}
+              role="radio"
+              aria-checked={isSelected}
+              aria-label={`${model.name} - ${model.specialty}`}
               className={cn(
                 'relative p-4 rounded-lg border transition-all duration-300',
                 'hover:scale-[1.02] active:scale-[0.98]',
@@ -44,7 +47,7 @@ export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorPro
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-bold text-white">{model.name}</span>
                   {isSelected && (
-                    <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" aria-hidden="true" />
                   )}
                 </div>
                 <p className="text-xs text-gray-400">{model.specialty}</p>
