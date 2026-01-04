@@ -13,7 +13,7 @@ export function useKeyboardShortcuts() {
       const target = event.target as HTMLElement;
       const isTyping = target.tagName === 'INPUT' || 
                        target.tagName === 'TEXTAREA' ||
-                       target.isContentEditable;
+                       target.contentEditable === 'true';
 
       // Help/Tutorial - F1 or Ctrl+H
       if (event.key === 'F1' || (event.ctrlKey && event.key === 'h')) {

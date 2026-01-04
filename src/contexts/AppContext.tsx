@@ -50,7 +50,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [selectedModel, setSelectedModel] = useState<AIModel>('chatgpt');
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem('auroragov_messages');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
   const [auditEntries, setAuditEntries] = useState<AuditEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,12 +65,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
   
   const [templateUsage, setTemplateUsage] = useState<Record<string, TemplateUsage>>(() => {
     const saved = localStorage.getItem('auroragov_template_usage');
-    return saved ? JSON.parse(saved) : {};
+    try {
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
   });
   
   const [favoriteTemplates, setFavoriteTemplates] = useState<string[]>(() => {
     const saved = localStorage.getItem('auroragov_favorite_templates');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   // Auto-save messages to localStorage
@@ -154,13 +166,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const toggleFavoriteTemplate = (templateId: string) => {
+    const wasFavorite = favoriteTemplates.includes(templateId);
     setFavoriteTemplates(prev => {
       if (prev.includes(templateId)) {
         return prev.filter(id => id !== templateId);
       }
       return [...prev, templateId];
     });
-    addAuditEntry('Template Favorito', `Template ${favoriteTemplates.includes(templateId) ? 'removido dos' : 'adicionado aos'} favoritos`);
+    addAuditEntry('Template Favorito', `Template ${wasFavorite ? 'removido dos' : 'adicionado aos'} favoritos`);
   };
 
   const getRecommendedTemplates = (templates: PromptTemplate[]): PromptTemplate[] => {
