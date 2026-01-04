@@ -4,7 +4,7 @@
 
 O **Aurora Gov** é uma plataforma governamental inovadora que consolida múltiplos modelos de Inteligência Artificial (ChatGPT, Claude, Gemini, DeepSeek) em uma interface unificada, segura e auditável, especificamente projetada para o setor público brasileiro.
 
-**Data da Análise:** 04 de Janeiro de 2026  
+**Data da Análise:** 04 de janeiro de 2026  
 **Versão do Sistema:** 0.0.0 (Em Desenvolvimento)  
 **Status:** Protótipo Funcional com Simulações
 
@@ -1406,10 +1406,10 @@ Total                   1198 linhas  (Componentes dashboard)
 
 ---
 
-**Documento Gerado:** 04 de Janeiro de 2026  
+**Documento Gerado:** 04 de janeiro de 2026  
 **Versão:** 1.0  
 **Status:** Completo  
-**Próxima Revisão:** Após Fase 1 do Roadmap
+**Próxima Revisão:** Abril de 2026 (após conclusão da Fase 1 do Roadmap)
 
 ---
 
