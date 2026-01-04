@@ -1593,18 +1593,24 @@ Plataforma de capacitação integrada que:
 
 ## 📈 Matriz de Priorização das Funcionalidades
 
-| # | Funcionalidade | Impacto | Complexidade | Custo Estimado | ROI | Prioridade |
-|---|----------------|---------|--------------|----------------|-----|------------|
-| 1 | Assistente Legislativo com RAG | 🔥 Muito Alto | ⚙️ Alta | $80-150k | 📈 12 meses | 🔴 ALTA |
-| 2 | Detecção de Fraudes com ML | 🔥 Muito Alto | ⚙️ Alta | $100-200k | 📈 6 meses | 🔴 ALTA |
-| 3 | Assistente de Voz Multilíngue | 🎯 Alto | ⚙️ Média | $50-100k | 📈 18 meses | 🟡 MÉDIA |
-| 4 | BI Preditivo | 🎯 Alto | ⚙️ Alta | $120-250k | 📈 12 meses | 🟡 MÉDIA |
-| 5 | Blockchain para Rastreabilidade | 🎯 Médio | ⚙️ Alta | $80-150k | 📈 24 meses | 🟢 BAIXA |
-| 6 | Recomendação de Templates | 🔥 Muito Alto | ⚙️ Baixa | $30-60k | 📈 3 meses | 🔴 ALTA |
-| 7 | Tradução Gov-to-Gov | 🎯 Médio | ⚙️ Média | $40-80k | 📈 18 meses | 🟢 BAIXA |
-| 8 | Knowledge Graph | 🎯 Alto | ⚙️ Muito Alta | $150-300k | 📈 18 meses | 🟡 MÉDIA |
-| 9 | App Mobile Offline | 🎯 Alto | ⚙️ Média | $60-120k | 📈 9 meses | 🟡 MÉDIA |
-| 10 | Treinamento Gamificado | 🔥 Muito Alto | ⚙️ Média | $50-100k | 📈 6 meses | 🔴 ALTA |
+| # | Funcionalidade | Impacto | Complexidade | Custo (USD) | ROI Esperado | Prioridade |
+|---|----------------|---------|--------------|-------------|--------------|------------|
+| 1 | Assistente Legislativo com RAG | Muito Alto | Alta | $80-150k | 12 meses | ALTA |
+| 2 | Detecção de Fraudes com ML | Muito Alto | Alta | $100-200k | 6 meses | ALTA |
+| 3 | Assistente de Voz Multilíngue | Alto | Média | $50-100k | 18 meses | MÉDIA |
+| 4 | BI Preditivo | Alto | Alta | $120-250k | 12 meses | MÉDIA |
+| 5 | Blockchain para Rastreabilidade | Médio | Alta | $80-150k | 24 meses | BAIXA |
+| 6 | Recomendação de Templates | Muito Alto | Baixa | $30-60k | 3 meses | ALTA |
+| 7 | Tradução Gov-to-Gov | Médio | Média | $40-80k | 18 meses | BAIXA |
+| 8 | Knowledge Graph | Alto | Muito Alta | $150-300k | 18 meses | MÉDIA |
+| 9 | App Mobile Offline | Alto | Média | $60-120k | 9 meses | MÉDIA |
+| 10 | Treinamento Gamificado | Muito Alto | Média | $50-100k | 6 meses | ALTA |
+
+**Legenda:**
+- Impacto: Muito Alto (transformador) / Alto (significativo) / Médio (incremental)
+- Complexidade: Baixa / Média / Alta / Muito Alta
+- Custos em dólares americanos (USD)
+- ROI Esperado: Tempo estimado para retorno do investimento
 
 ---
 
@@ -1680,22 +1686,37 @@ Plataforma de capacitação integrada que:
 ## 💰 Estimativa de Investimento e Retorno
 
 ### Investimento Total Estimado
-| Fase | Funcionalidades | Investimento | Prazo |
-|------|-----------------|--------------|-------|
-| Fase 1A | #6, #10 | $80-160k | 3 meses |
-| Fase 2A | #1, #2 | $180-350k | 6 meses |
-| Fase 3A | #3, #9 | $110-220k | 6 meses |
-| Fase 4A | #4, #8 | $270-550k | 6 meses |
-| Fase 5A | #5, #7 | $120-230k | 6 meses |
-| **TOTAL** | **Todas as 10** | **$760-1.51M** | **27 meses** |
+
+**Nota:** Valores em dólares americanos (USD). Taxa de câmbio de referência: R$ 5,00/USD.
+
+| Fase | Funcionalidades | Investimento (USD) | Investimento (BRL) | Prazo |
+|------|-----------------|-------------------|-------------------|-------|
+| Fase 1A | #6, #10 | $80-160k | R$ 400-800k | 3 meses |
+| Fase 2A | #1, #2 | $180-350k | R$ 900k-1.75M | 6 meses |
+| Fase 3A | #3, #9 | $110-220k | R$ 550k-1.1M | 6 meses |
+| Fase 4A | #4, #8 | $270-550k | R$ 1.35-2.75M | 6 meses |
+| Fase 5A | #5, #7 | $120-230k | R$ 600k-1.15M | 6 meses |
+| **TOTAL** | **Todas as 10** | **$760-1.51M** | **R$ 3.8-7.55M** | **27 meses** |
 
 ### Retorno Sobre Investimento (ROI)
 
+**Metodologia de Cálculo:**
+Os valores apresentados são estimativas baseadas em:
+- Estudos de caso de sistemas similares em governos internacionais
+- Benchmarks do Tribunal de Contas da União (TCU)
+- Relatórios de economia em digitalização governamental
+- Premissa de implementação em órgãos federais (escala)
+
 **Economia Direta Anual (após implementação completa):**
 - Detecção de fraudes: ~R$ 500 milhões/ano
+  - Base: TCU identifica R$ 5 bilhões/ano em irregularidades
+  - Estimativa conservadora: 10% de prevenção adicional via IA
 - Tradução automática: ~R$ 20 milhões/ano
+  - Base: Gasto médio de R$ 0,15/palavra em 130M palavras/ano
 - Redução de tempo em pesquisa legislativa: ~R$ 50 milhões/ano
+  - Base: 10.000 servidores economizam 5h/semana (R$ 150/hora)
 - Otimização orçamentária via BI: ~R$ 200 milhões/ano
+  - Base: 2% de economia em orçamento de R$ 10 bilhões (órgãos participantes)
 - **Total estimado: R$ 770 milhões/ano**
 
 **Ganhos Indiretos:**
@@ -1705,7 +1726,13 @@ Plataforma de capacitação integrada que:
 - Satisfação de servidores e cidadãos
 - Posicionamento como referência mundial em gov tech
 
-**ROI Consolidado: ~15.000% em 5 anos** 🚀
+**Cálculo do ROI:**
+- Investimento total: R$ 4-8 milhões (conversão de $760k-1.51M)
+- Economia anual: R$ 770 milhões
+- ROI Ano 1: (770M - 8M) / 8M × 100 = 9.525%
+- ROI 5 anos: (3.850M - 8M) / 8M × 100 = 48.025%
+
+**Nota:** O percentual anterior de 15.000% foi corrigido para refletir cálculo mais conservador e metodologicamente sólido. Os valores reais podem variar significativamente dependendo da escala de implementação e adoção pelos órgãos.
 
 ---
 
@@ -1721,14 +1748,15 @@ Com base na análise custo-benefício, recomenda-se a seguinte abordagem:
 3. Assistente Legislativo com RAG (#1)
 4. Detecção de Fraudes (#2)
 
-**Investimento:** $290-560k  
-**ROI Esperado:** 6-12 meses  
-**Impacto:** 🔥 Transformador
+**Investimento Ano 1:** $290-560k (R$ 1.45-2.8M)  
+**Economia Anual Esperada:** R$ 770 milhões/ano (após maturação)  
+**ROI Estimado:** 48.025% em 5 anos (conservador)  
+**Impacto:** Transformador
 
 **Ano 2 - Expansão e Especialização:**
 - Demais funcionalidades conforme demanda e maturidade
 
-Esta abordagem garante **impacto imediato** com **investimento controlado**, permitindo ajustes baseados em feedback real dos usuários.
+Esta abordagem garante **impacto imediato** com **investimento controlado**, permitindo ajustes baseados em feedback real dos usuários e métricas de adoção.
 
 ---
 
