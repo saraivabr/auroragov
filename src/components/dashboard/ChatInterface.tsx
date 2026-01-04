@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,7 +16,44 @@ interface ChatInterfaceProps {
   onPromptChange: (value: string) => void;
 }
 
-export function ChatInterface({
+// Memoized message component to prevent unnecessary re-renders
+const MessageItem = memo(({ message }: { message: Message }) => {
+  const isUser = message.role === 'user';
+  const modelInfo = AI_MODELS[message.model];
+
+  return (
+    <div className={cn(
+      'p-4 rounded-lg animate-in slide-in-from-bottom-2',
+      isUser ? 'bg-cyan-500/5 border border-cyan-500/20' : 'bg-gray-800/30'
+    )}>
+      <div className="flex items-start justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-white">
+            {isUser ? 'Você' : modelInfo.name}
+          </span>
+          {!isUser && (
+            <Badge variant="outline" className="text-xs border-cyan-500/50 text-cyan-400">
+              {modelInfo.specialty}
+            </Badge>
+          )}
+        </div>
+        <span className="text-xs text-gray-500">
+          {new Date(message.timestamp).toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          })}
+        </span>
+      </div>
+      <div className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
+        {message.content}
+      </div>
+    </div>
+  );
+});
+
+MessageItem.displayName = 'MessageItem';
+
+export const ChatInterface = memo(function ChatInterface({
   selectedModel,
   messages,
   onSendMessage,
@@ -72,54 +109,19 @@ export function ChatInterface({
           </div>
         ) : (
           <div className="space-y-6">
-            {messages.map((message, index) => (
-              <div
-                key={message.id}
-                className={cn(
-                  'animate-slide-up',
-                  message.role === 'user' ? 'flex justify-end' : 'flex justify-start'
-                )}
-                style={{ animationDelay: `${index * 80}ms` }}
-              >
-                <div
-                  className={cn(
-                    'max-w-[80%] rounded-lg p-4',
-                    message.role === 'user'
-                      ? 'bg-cyan-500/10 border border-cyan-500/30'
-                      : 'glass-effect'
-                  )}
-                >
-                  {message.role === 'assistant' && (
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="outline" className="text-xs border-cyan-500/50 text-cyan-400">
-                        {AI_MODELS[message.model].name}
-                      </Badge>
-                      <span className="text-xs text-gray-500">
-                        {message.timestamp.toLocaleTimeString('pt-BR', {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
-                    </div>
-                  )}
-                  <div className="text-sm text-gray-200 whitespace-pre-wrap">
-                    {message.content}
-                  </div>
-                </div>
-              </div>
+            {messages.map((message) => (
+              <MessageItem key={message.id} message={message} />
             ))}
             {isLoading && (
-              <div className="flex justify-start animate-slide-up">
-                <div className="glass-effect rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs border-cyan-500/50 text-cyan-400">
-                      {AI_MODELS[selectedModel].name}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm">Processando...</span>
-                  </div>
+              <div className="p-4 rounded-lg bg-gray-800/30 animate-in slide-in-from-bottom-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge variant="outline" className="text-xs border-cyan-500/50 text-cyan-400">
+                    {AI_MODELS[selectedModel].name}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2 text-gray-400">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-sm">Processando...</span>
                 </div>
               </div>
             )}
@@ -170,4 +172,4 @@ export function ChatInterface({
       </div>
     </div>
   );
-}
+});

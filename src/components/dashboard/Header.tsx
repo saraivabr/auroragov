@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { Shield, Clock, CheckCircle2, HelpCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { KeyboardShortcutsHelp } from './KeyboardShortcutsHelp';
 
-export function Header() {
+export const Header = memo(function Header() {
   const { setShowOnboarding } = useApp();
   
   const restartTour = () => {
@@ -70,4 +71,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+});

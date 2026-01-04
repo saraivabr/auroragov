@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { AIModel, AI_MODELS } from '@/types/ai-models';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -7,7 +8,7 @@ interface ModelSelectorProps {
   onModelChange: (model: AIModel) => void;
 }
 
-export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorProps) {
+export const ModelSelector = memo(function ModelSelector({ selectedModel, onModelChange }: ModelSelectorProps) {
   return (
     <div className="space-y-3" role="region" aria-label="Seletor de Modelo de IA">
       <div className="flex items-center justify-between">
@@ -58,4 +59,4 @@ export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorPro
       </div>
     </div>
   );
-}
+});
