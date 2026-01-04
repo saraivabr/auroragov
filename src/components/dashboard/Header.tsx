@@ -1,7 +1,18 @@
-import { Shield, Clock, CheckCircle2 } from 'lucide-react';
+import { memo } from 'react';
+import { Shield, Clock, CheckCircle2, HelpCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useApp } from '@/contexts/AppContext';
+import { KeyboardShortcutsHelp } from './KeyboardShortcutsHelp';
 
-export function Header() {
+export const Header = memo(function Header() {
+  const { setShowOnboarding } = useApp();
+  
+  const restartTour = () => {
+    localStorage.removeItem('auroragov_onboarding_completed');
+    setShowOnboarding(true);
+  };
+  
   return (
     <header className="border-b border-cyan-500/20 bg-[#0A1628]/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4">
@@ -21,6 +32,20 @@ export function Header() {
 
           {/* Security Badge */}
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <KeyboardShortcutsHelp />
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={restartTour}
+                className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+                title="Revisar Tutorial"
+              >
+                <HelpCircle className="w-4 h-4" />
+              </Button>
+            </div>
+            
             <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg glass-effect">
               <Shield className="w-4 h-4 text-cyan-400" />
               <div className="text-xs">
@@ -46,4 +71,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+});
