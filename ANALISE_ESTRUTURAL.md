@@ -1728,7 +1728,7 @@ Os valores apresentados são estimativas baseadas em:
 
 **Cálculo do ROI:**
 - Investimento total em 5 fases: R$ 3.8-7.55M
-- Investimento médio considerado: R$ 6M
+- Investimento médio considerado: R$ 5.7M (média aritmética)
 - Economia anual após maturação (ano 3+): R$ 770M/ano
 - Economia 5 anos (considerando ramp-up): 
   - Ano 1: R$ 0 (implementação)
@@ -1736,8 +1736,9 @@ Os valores apresentados são estimativas baseadas em:
   - Ano 3: R$ 500M (65% da capacidade)
   - Ano 4: R$ 700M (90% da capacidade)
   - Ano 5: R$ 770M (100% da capacidade)
-  - **Total 5 anos: R$ 2.17B**
-- ROI 5 anos: (2.170M - 6M) / 6M × 100 = **36.067%** (ou retorno de 361x o investimento)
+  - **Total 5 anos: R$ 2.170M (2,17 bilhões)**
+- **Retorno líquido:** R$ 2.170M - R$ 5.7M = R$ 2.164,3M
+- **ROI 5 anos:** (2.164,3M / 5.7M) × 100 = **37.971%** (ou ~380x de retorno)
 
 **Análise de Payback:**
 - Considerando cenário médio, o payback ocorre entre mês 30-36
@@ -1762,7 +1763,7 @@ Com base na análise custo-benefício, recomenda-se a seguinte abordagem:
 **Investimento Ano 1:** $290-560k (R$ 1.45-2.8M)  
 **Economia Anual Esperada:** R$ 770M/ano (após maturação completa - ano 5)  
 **Payback Estimado:** 30-36 meses  
-**ROI 5 anos:** 36.067% (cenário conservador com ramp-up gradual)  
+**ROI 5 anos:** 37.971% ou ~380x de retorno sobre investimento  
 **Impacto:** Transformador
 
 **Ano 2 - Expansão e Especialização:**
