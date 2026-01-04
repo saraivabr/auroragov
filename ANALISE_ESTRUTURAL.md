@@ -1738,7 +1738,8 @@ Os valores apresentados são estimativas baseadas em:
   - Ano 5: R$ 770M (100% da capacidade)
   - **Total 5 anos: R$ 2.170M (2,17 bilhões)**
 - **Retorno líquido:** R$ 2.170M - R$ 5.7M = R$ 2.164,3M
-- **ROI 5 anos:** (2.164,3M / 5.7M) × 100 = **37.971%** (ou ~380x de retorno)
+- **ROI 5 anos:** (2.164,3M / 5.7M) × 100 = **37.971%** (ou 379,71 vezes o investimento)
+- **Multiplicador de retorno:** 2.170M / 5.7M = ~380x
 
 **Análise de Payback:**
 - Considerando cenário médio, o payback ocorre entre mês 30-36
@@ -1763,7 +1764,7 @@ Com base na análise custo-benefício, recomenda-se a seguinte abordagem:
 **Investimento Ano 1:** $290-560k (R$ 1.45-2.8M)  
 **Economia Anual Esperada:** R$ 770M/ano (após maturação completa - ano 5)  
 **Payback Estimado:** 30-36 meses  
-**ROI 5 anos:** 37.971% ou ~380x de retorno sobre investimento  
+**ROI 5 anos:** 37.971% (multiplicador de 380x sobre investimento)  
 **Impacto:** Transformador
 
 **Ano 2 - Expansão e Especialização:**
