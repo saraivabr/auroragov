@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ChatPage } from "./pages/ChatPage";
+import { HomePage } from "./pages/HomePage";
+import { ConsultaJuridicaPage } from "./pages/ConsultaJuridicaPage";
+import { AnaliseDocumentosPage } from "./pages/AnaliseDocumentosPage";
+import { GeradorDocumentosPage } from "./pages/GeradorDocumentosPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
@@ -18,7 +21,10 @@ function AppContent() {
       <Route path="/esqueci-senha" element={!user ? <ForgotPasswordPage /> : <Navigate to="/" replace />} />
       <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
 
-      <Route path="/" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+      <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+      <Route path="/consulta-juridica" element={<ProtectedRoute><ConsultaJuridicaPage /></ProtectedRoute>} />
+      <Route path="/analise-documentos" element={<ProtectedRoute><AnaliseDocumentosPage /></ProtectedRoute>} />
+      <Route path="/gerar-documentos" element={<ProtectedRoute><GeradorDocumentosPage /></ProtectedRoute>} />
 
       <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />
     </Routes>

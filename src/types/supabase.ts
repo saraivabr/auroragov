@@ -9,153 +9,136 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      analises_editais: {
+      analises_documentos: {
         Row: {
           id: string
-          edital_id: string
-          tipo_analise: string
-          resultado: Json | null
-          criticidade_geral: string | null
-          pontos_criticos: Json[] | null
-          pontos_importantes: Json[] | null
-          sugestoes: Json[] | null
-          modelo_ia: string | null
-          usuario_id: string
-          usuario_nome: string
-          created_at: string | null
-        }
-        Insert: {
-          id?: string
-          edital_id: string
-          tipo_analise: string
-          resultado?: Json | null
-          criticidade_geral?: string | null
-          pontos_criticos?: Json[] | null
-          pontos_importantes?: Json[] | null
-          sugestoes?: Json[] | null
-          modelo_ia?: string | null
-          usuario_id: string
-          usuario_nome: string
-          created_at?: string | null
-        }
-        Update: {
-          id?: string
-          edital_id?: string
-          tipo_analise?: string
-          resultado?: Json | null
-          criticidade_geral?: string | null
-          pontos_criticos?: Json[] | null
-          pontos_importantes?: Json[] | null
-          sugestoes?: Json[] | null
-          modelo_ia?: string | null
-          usuario_id?: string
-          usuario_nome?: string
-          created_at?: string | null
-        }
-      }
-      app_users: {
-        Row: {
-          id: string
-          name: string
-          email: string
-          role: string
+          user_id: string
+          user_name: string
+          tipo_documento: string
+          titulo: string
+          conteudo_original: string
+          resumo: string
+          pontos_criticos: Json[]
+          checklist: Json[]
+          riscos_identificados: Json[]
           status: string
-          last_login: string | null
-          projects_count: number
-          avatar_url: string | null
-          created_at: string | null
-          updated_at: string | null
+          arquivo_url: string | null
+          created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
-          name: string
-          email: string
-          role?: string
+          user_id: string
+          user_name: string
+          tipo_documento: string
+          titulo: string
+          conteudo_original: string
+          resumo: string
+          pontos_criticos?: Json[]
+          checklist?: Json[]
+          riscos_identificados?: Json[]
           status?: string
-          last_login?: string | null
-          projects_count?: number
-          avatar_url?: string | null
-          created_at?: string | null
-          updated_at?: string | null
+          arquivo_url?: string | null
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
-          name?: string
-          email?: string
-          role?: string
-          status?: string
-          last_login?: string | null
-          projects_count?: number
-          avatar_url?: string | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-      }
-      audit_logs: {
-        Row: {
-          id: string
-          user_id: string | null
-          user_name: string
-          action: string
-          entity_type: string
-          entity_id: string | null
-          details: string
-          metadata: Json | null
-          timestamp: string | null
-        }
-        Insert: {
-          id?: string
-          user_id?: string | null
-          user_name: string
-          action: string
-          entity_type: string
-          entity_id?: string | null
-          details: string
-          metadata?: Json | null
-          timestamp?: string | null
-        }
-        Update: {
-          id?: string
-          user_id?: string | null
+          user_id?: string
           user_name?: string
-          action?: string
-          entity_type?: string
-          entity_id?: string | null
-          details?: string
-          metadata?: Json | null
-          timestamp?: string | null
+          tipo_documento?: string
+          titulo?: string
+          conteudo_original?: string
+          resumo?: string
+          pontos_criticos?: Json[]
+          checklist?: Json[]
+          riscos_identificados?: Json[]
+          status?: string
+          arquivo_url?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
-      comentarios_editais: {
+      base_normativa: {
         Row: {
           id: string
-          edital_id: string
-          usuario_id: string
-          usuario_nome: string
-          comentario: string
-          tipo: string | null
-          created_at: string | null
-          updated_at: string | null
+          tipo: string
+          numero: string
+          ano: number
+          ementa: string
+          conteudo: string
+          orgao_emissor: string
+          data_publicacao: string
+          status: string
+          tags: string[]
+          user_id: string
+          created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
-          edital_id: string
-          usuario_id: string
-          usuario_nome: string
-          comentario: string
-          tipo?: string | null
-          created_at?: string | null
-          updated_at?: string | null
+          tipo: string
+          numero: string
+          ano: number
+          ementa: string
+          conteudo: string
+          orgao_emissor: string
+          data_publicacao: string
+          status?: string
+          tags?: string[]
+          user_id: string
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
-          edital_id?: string
-          usuario_id?: string
-          usuario_nome?: string
-          comentario?: string
-          tipo?: string | null
-          created_at?: string | null
-          updated_at?: string | null
+          tipo?: string
+          numero?: string
+          ano?: number
+          ementa?: string
+          conteudo?: string
+          orgao_emissor?: string
+          data_publicacao?: string
+          status?: string
+          tags?: string[]
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      consultas_juridicas: {
+        Row: {
+          id: string
+          user_id: string
+          user_name: string
+          pergunta: string
+          resposta: string
+          normas_relacionadas: Json[]
+          confiabilidade: string
+          feedback: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          user_name: string
+          pergunta: string
+          resposta: string
+          normas_relacionadas?: Json[]
+          confiabilidade?: string
+          feedback?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          user_name?: string
+          pergunta?: string
+          resposta?: string
+          normas_relacionadas?: Json[]
+          confiabilidade?: string
+          feedback?: string | null
+          created_at?: string
         }
       }
       conversations: {
@@ -181,104 +164,51 @@ export type Database = {
           updated_at?: string
         }
       }
-      editais: {
+      documentos_oficiais: {
         Row: {
           id: string
-          numero_edital: string
-          orgao: string
-          objeto: string
-          modalidade: string
-          valor_estimado: number | null
-          data_publicacao: string | null
-          data_abertura: string | null
-          status: string
-          descricao: string | null
-          arquivo_url: string | null
-          usuario_responsavel_id: string | null
-          usuario_responsavel_nome: string | null
-          tags: string[] | null
           user_id: string
-          created_at: string | null
-          updated_at: string | null
+          user_name: string
+          tipo: string
+          titulo: string
+          conteudo: string
+          destinatario: string | null
+          numero_documento: string | null
+          is_template: boolean
+          status: string
+          metadata: Json
+          created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
-          numero_edital: string
-          orgao: string
-          objeto: string
-          modalidade: string
-          valor_estimado?: number | null
-          data_publicacao?: string | null
-          data_abertura?: string | null
-          status?: string
-          descricao?: string | null
-          arquivo_url?: string | null
-          usuario_responsavel_id?: string | null
-          usuario_responsavel_nome?: string | null
-          tags?: string[] | null
           user_id: string
-          created_at?: string | null
-          updated_at?: string | null
+          user_name: string
+          tipo: string
+          titulo: string
+          conteudo: string
+          destinatario?: string | null
+          numero_documento?: string | null
+          is_template?: boolean
+          status?: string
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
-          numero_edital?: string
-          orgao?: string
-          objeto?: string
-          modalidade?: string
-          valor_estimado?: number | null
-          data_publicacao?: string | null
-          data_abertura?: string | null
-          status?: string
-          descricao?: string | null
-          arquivo_url?: string | null
-          usuario_responsavel_id?: string | null
-          usuario_responsavel_nome?: string | null
-          tags?: string[] | null
           user_id?: string
-          created_at?: string | null
-          updated_at?: string | null
-        }
-      }
-      invoices: {
-        Row: {
-          id: string
-          invoice_number: string
-          status: string
-          payment_method: string
-          amount: number
-          date: string
-          customer_name: string
-          customer_email: string
-          notes: string | null
-          created_at: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          id?: string
-          invoice_number: string
+          user_name?: string
+          tipo?: string
+          titulo?: string
+          conteudo?: string
+          destinatario?: string | null
+          numero_documento?: string | null
+          is_template?: boolean
           status?: string
-          payment_method: string
-          amount?: number
-          date?: string
-          customer_name: string
-          customer_email: string
-          notes?: string | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          id?: string
-          invoice_number?: string
-          status?: string
-          payment_method?: string
-          amount?: number
-          date?: string
-          customer_name?: string
-          customer_email?: string
-          notes?: string | null
-          created_at?: string | null
-          updated_at?: string | null
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
         }
       }
       messages: {
@@ -307,45 +237,175 @@ export type Database = {
           created_at?: string
         }
       }
-      products: {
+      processos_administrativos: {
         Row: {
           id: string
-          name: string
-          description: string
-          price: number
-          stock: number
-          category: string
-          sku: string
-          image_url: string | null
-          is_active: boolean
-          created_at: string | null
-          updated_at: string | null
+          numero_processo: string
+          tipo: string
+          assunto: string
+          requerente: string
+          status: string
+          prioridade: string
+          prazo_limite: string | null
+          orgao_responsavel: string
+          servidor_responsavel_id: string | null
+          servidor_responsavel_nome: string | null
+          proximo_passo: string | null
+          historico: Json[]
+          user_id: string
+          created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
-          name: string
-          description?: string
-          price?: number
-          stock?: number
-          category: string
-          sku: string
-          image_url?: string | null
-          is_active?: boolean
-          created_at?: string | null
-          updated_at?: string | null
+          numero_processo: string
+          tipo: string
+          assunto: string
+          requerente: string
+          status?: string
+          prioridade?: string
+          prazo_limite?: string | null
+          orgao_responsavel: string
+          servidor_responsavel_id?: string | null
+          servidor_responsavel_nome?: string | null
+          proximo_passo?: string | null
+          historico?: Json[]
+          user_id: string
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
-          name?: string
-          description?: string
-          price?: number
-          stock?: number
-          category?: string
-          sku?: string
-          image_url?: string | null
-          is_active?: boolean
-          created_at?: string | null
-          updated_at?: string | null
+          numero_processo?: string
+          tipo?: string
+          assunto?: string
+          requerente?: string
+          status?: string
+          prioridade?: string
+          prazo_limite?: string | null
+          orgao_responsavel?: string
+          servidor_responsavel_id?: string | null
+          servidor_responsavel_nome?: string | null
+          proximo_passo?: string | null
+          historico?: Json[]
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      recursos_administrativos: {
+        Row: {
+          id: string
+          numero_recurso: string
+          processo_origem: string
+          tipo_recurso: string
+          recorrente: string
+          fundamentacao: string
+          analise_ia: Json
+          teoria_juridica_aplicavel: string | null
+          sugestao_posicionamento: string | null
+          status: string
+          prazo_decisao: string
+          servidor_responsavel_id: string | null
+          servidor_responsavel_nome: string | null
+          user_id: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          numero_recurso: string
+          processo_origem: string
+          tipo_recurso: string
+          recorrente: string
+          fundamentacao: string
+          analise_ia?: Json
+          teoria_juridica_aplicavel?: string | null
+          sugestao_posicionamento?: string | null
+          status?: string
+          prazo_decisao: string
+          servidor_responsavel_id?: string | null
+          servidor_responsavel_nome?: string | null
+          user_id: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          numero_recurso?: string
+          processo_origem?: string
+          tipo_recurso?: string
+          recorrente?: string
+          fundamentacao?: string
+          analise_ia?: Json
+          teoria_juridica_aplicavel?: string | null
+          sugestao_posicionamento?: string | null
+          status?: string
+          prazo_decisao?: string
+          servidor_responsavel_id?: string | null
+          servidor_responsavel_nome?: string | null
+          user_id?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      solicitacoes_cidadao: {
+        Row: {
+          id: string
+          protocolo: string
+          tipo: string
+          assunto: string
+          descricao: string
+          cidadao_nome: string
+          cidadao_cpf: string
+          cidadao_email: string
+          status: string
+          resposta_sugerida: string | null
+          resposta_final: string | null
+          prazo_resposta: string
+          servidor_responsavel_id: string | null
+          servidor_responsavel_nome: string | null
+          user_id: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          protocolo: string
+          tipo: string
+          assunto: string
+          descricao: string
+          cidadao_nome: string
+          cidadao_cpf: string
+          cidadao_email: string
+          status?: string
+          resposta_sugerida?: string | null
+          resposta_final?: string | null
+          prazo_resposta: string
+          servidor_responsavel_id?: string | null
+          servidor_responsavel_nome?: string | null
+          user_id: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          protocolo?: string
+          tipo?: string
+          assunto?: string
+          descricao?: string
+          cidadao_nome?: string
+          cidadao_cpf?: string
+          cidadao_email?: string
+          status?: string
+          resposta_sugerida?: string | null
+          resposta_final?: string | null
+          prazo_resposta?: string
+          servidor_responsavel_id?: string | null
+          servidor_responsavel_nome?: string | null
+          user_id?: string
+          created_at?: string
+          updated_at?: string
         }
       }
     }
