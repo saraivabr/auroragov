@@ -61,3 +61,66 @@ export type ProductInsert = Omit<Product, 'id' | 'created_at' | 'updated_at'>
 export type ProductUpdate = Partial<ProductInsert>
 
 export type AuditLogInsert = Omit<AuditLog, 'id' | 'timestamp'>
+
+export interface Edital {
+  id: string
+  numero_edital: string
+  orgao: string
+  objeto: string
+  modalidade: string
+  valor_estimado: number | null
+  data_publicacao: string | null
+  data_abertura: string | null
+  status: 'em_analise' | 'aprovado' | 'rejeitado' | 'enviado' | 'cancelado'
+  descricao: string | null
+  arquivo_url: string | null
+  usuario_responsavel_id: string | null
+  usuario_responsavel_nome: string | null
+  tags: string[] | null
+  user_id: string
+  created_at: string
+  updated_at: string
+}
+
+export interface PontoAnalise {
+  titulo: string
+  descricao: string
+  referencia_legal?: string
+  localizacao?: string
+  impacto?: string
+}
+
+export interface AnaliseEdital {
+  id: string
+  edital_id: string
+  tipo_analise: 'estrutural' | 'juridica' | 'tecnica' | 'completa'
+  resultado: Record<string, any>
+  criticidade_geral: 'baixa' | 'media' | 'alta' | 'critica'
+  pontos_criticos: PontoAnalise[]
+  pontos_importantes: PontoAnalise[]
+  sugestoes: PontoAnalise[]
+  modelo_ia: string | null
+  usuario_id: string
+  usuario_nome: string
+  created_at: string
+}
+
+export interface ComentarioEdital {
+  id: string
+  edital_id: string
+  usuario_id: string
+  usuario_nome: string
+  comentario: string
+  tipo: 'comentario' | 'observacao' | 'alerta'
+  created_at: string
+  updated_at: string
+}
+
+export type EditalInsert = Omit<Edital, 'id' | 'created_at' | 'updated_at'>
+export type EditalUpdate = Partial<EditalInsert>
+
+export type AnaliseEditalInsert = Omit<AnaliseEdital, 'id' | 'created_at'>
+export type AnaliseEditalUpdate = Partial<AnaliseEditalInsert>
+
+export type ComentarioEditalInsert = Omit<ComentarioEdital, 'id' | 'created_at' | 'updated_at'>
+export type ComentarioEditalUpdate = Partial<Omit<ComentarioEdital, 'id' | 'created_at' | 'updated_at'>>

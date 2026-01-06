@@ -124,6 +124,17 @@ export function Navbar() {
                   Logs de Auditoria
                 </Button>
               </Link>
+              <Link to="/editais">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={`text-sm font-medium ${
+                    isActive('/editais') || location.pathname.startsWith('/editais/') ? 'text-primary bg-blue-50' : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                  }`}
+                >
+                  Editais
+                </Button>
+              </Link>
             </div>
 
             <div className="flex items-center gap-3">

@@ -6,6 +6,8 @@ import { InvoicesPage } from "./pages/InvoicesPage";
 import { UsersPage } from "./pages/UsersPage";
 import { ProductsPage } from "./pages/ProductsPage";
 import { AuditLogsPage } from "./pages/AuditLogsPage";
+import { EditaisPage } from "./pages/EditaisPage";
+import { EditalDetailsPage } from "./pages/EditalDetailsPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
@@ -32,6 +34,8 @@ function AppContent() {
         <Route path="/usuarios" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />
         <Route path="/produtos" element={<ProtectedRoute><ProductsPage /></ProtectedRoute>} />
         <Route path="/logs" element={<ProtectedRoute><AuditLogsPage /></ProtectedRoute>} />
+        <Route path="/editais" element={<ProtectedRoute><EditaisPage /></ProtectedRoute>} />
+        <Route path="/editais/:id" element={<ProtectedRoute><EditalDetailsPage /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />
       </Routes>
