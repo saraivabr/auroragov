@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rawline:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,42 +7,46 @@
 
 @layer base {
   :root {
-    /* Aurora Gov Color System */
-    --navy-deep: 210 60% 8%;
-    --navy-medium: 210 50% 15%;
-    --cyan-electric: 190 100% 50%;
-    --amber-warm: 38 100% 65%;
-    --cream-soft: 210 40% 98%;
-    
-    --background: var(--navy-deep);
-    --foreground: var(--cream-soft);
+    /* Gov.br Color System */
+    --govbr-blue-warm-vivid-70: 215 50% 35%;
+    --govbr-blue-warm-vivid-80: 215 43% 50%;
+    --govbr-pure-0: 0 0% 100%;
+    --govbr-gray-2: 0 0% 98%;
+    --govbr-gray-10: 0 0% 93%;
+    --govbr-gray-20: 0 0% 86%;
+    --govbr-gray-80: 0 0% 33%;
+    --govbr-green: 142 60% 30%;
+    --govbr-yellow: 45 100% 51%;
 
-    --card: var(--navy-medium);
-    --card-foreground: var(--cream-soft);
+    --background: var(--govbr-pure-0);
+    --foreground: var(--govbr-gray-80);
 
-    --popover: var(--navy-medium);
-    --popover-foreground: var(--cream-soft);
+    --card: var(--govbr-pure-0);
+    --card-foreground: var(--govbr-gray-80);
 
-    --primary: var(--cyan-electric);
-    --primary-foreground: var(--navy-deep);
+    --popover: var(--govbr-pure-0);
+    --popover-foreground: var(--govbr-gray-80);
 
-    --secondary: var(--navy-medium);
-    --secondary-foreground: var(--cream-soft);
+    --primary: var(--govbr-blue-warm-vivid-70);
+    --primary-foreground: var(--govbr-pure-0);
 
-    --muted: 210 40% 20%;
-    --muted-foreground: 210 20% 65%;
+    --secondary: var(--govbr-gray-10);
+    --secondary-foreground: var(--govbr-gray-80);
 
-    --accent: var(--cyan-electric);
-    --accent-foreground: var(--navy-deep);
+    --muted: var(--govbr-gray-10);
+    --muted-foreground: 0 0% 45%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: var(--cream-soft);
+    --accent: var(--govbr-blue-warm-vivid-80);
+    --accent-foreground: var(--govbr-pure-0);
 
-    --border: 190 100% 50% / 0.2;
-    --input: 210 40% 25%;
-    --ring: var(--cyan-electric);
+    --destructive: 0 72% 51%;
+    --destructive-foreground: var(--govbr-pure-0);
 
-    --radius: 0.5rem;
+    --border: var(--govbr-gray-20);
+    --input: var(--govbr-gray-20);
+    --ring: var(--govbr-blue-warm-vivid-70);
+
+    --radius: 0rem;
   }
 }
 
@@ -49,48 +54,38 @@
   * {
     @apply border-border;
   }
-  
+
   body {
     @apply bg-background text-foreground;
-    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Raleway', 'Rawline', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 700;
+    font-family: 'Raleway', 'Rawline', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    color: hsl(var(--govbr-gray-80));
   }
 
   code, pre {
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-family: 'Courier New', monospace;
   }
 }
 
 @layer utilities {
-  .glass-effect {
-    background: rgba(10, 22, 40, 0.6);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 217, 255, 0.2);
+  .govbr-surface {
+    background: hsl(var(--govbr-pure-0));
+    border: 1px solid hsl(var(--govbr-gray-20));
   }
 
-  .glow-cyan {
-    box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+  .govbr-shadow {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   }
 
-  .glow-amber {
-    box-shadow: 0 0 20px rgba(255, 184, 77, 0.3);
-  }
-
-  .noise-texture {
-    position: relative;
-  }
-
-  .noise-texture::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1;
+  .govbr-header {
+    background: hsl(var(--govbr-blue-warm-vivid-70));
+    color: hsl(var(--govbr-pure-0));
   }
 
   .animate-fade-in {
@@ -99,10 +94,6 @@
 
   .animate-slide-up {
     animation: slideUp 0.3s ease-out;
-  }
-
-  .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
   }
 
   @keyframes fadeIn {
@@ -122,15 +113,6 @@
     to {
       opacity: 1;
       transform: translateY(0);
-    }
-  }
-
-  @keyframes pulseGlow {
-    0%, 100% {
-      box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
     }
   }
 }
