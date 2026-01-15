@@ -14,19 +14,19 @@ export const Header = memo(function Header() {
   };
   
   return (
-    <header className="border-b border-cyan-500/20 bg-[#0A1628]/80 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-govbr-blue-light/20 bg-govbr-blue-dark/80 backdrop-blur-md sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-govbr-blue to-govbr-blue-light flex items-center justify-center">
               <div className="w-6 h-6 border-2 border-white rounded-full relative">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full"></div>
               </div>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white tracking-tight">Aurora Gov</h1>
-              <p className="text-xs text-cyan-400">Central de Inteligência Artificial</p>
+              <h1 className="text-xl font-bold text-white tracking-tight">AuroraGov</h1>
+              <p className="text-xs text-govbr-yellow">Plataforma de IA para Gestão Pública</p>
             </div>
           </div>
 

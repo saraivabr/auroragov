@@ -43,8 +43,8 @@ Deno.serve(async (req: Request) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const openrouterApiKey = Deno.env.get("OPENROUTER_API_KEY");
-    const siteUrl = Deno.env.get("OPENROUTER_SITE_URL") || "https://adaptaone.com.br";
-    const siteName = Deno.env.get("OPENROUTER_SITE_NAME") || "ADAPTAONE Gov";
+    const siteUrl = Deno.env.get("OPENROUTER_SITE_URL") || "https://auroragov.com.br";
+    const siteName = Deno.env.get("OPENROUTER_SITE_NAME") || "AuroraGov";
 
     if (!openrouterApiKey) {
       throw new Error("OPENROUTER_API_KEY não configurada");

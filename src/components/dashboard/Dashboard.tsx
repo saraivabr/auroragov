@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 export function Dashboard() {
   return (
     <>
-      <div className="flex min-h-screen bg-[#2a2a2a]">
+      <div className="flex min-h-screen bg-govbr-blue-dark">
         <IconSidebar />
         <Sidebar />
         <MainContent />

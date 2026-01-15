@@ -1,4 +1,4 @@
-# Assistente Governamental IA
+# AuroraGov - Plataforma de IA para Gestão Pública Inteligente
 
 Plataforma completa de inteligência artificial desenvolvida especificamente para órgãos governamentais brasileiros. Automatiza processos administrativos, oferece consultas jurídicas fundamentadas e acelera a geração de documentos oficiais com total conformidade às normas brasileiras.
 

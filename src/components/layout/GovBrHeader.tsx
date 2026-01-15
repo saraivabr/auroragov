@@ -16,7 +16,7 @@ export function GovBrHeader() {
                 GOVERNO FEDERAL
               </div>
               <div className="text-white/90 text-xs leading-tight">
-                Sistema de Gestão
+                AuroraGov
               </div>
             </div>
           </div>

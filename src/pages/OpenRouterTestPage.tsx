@@ -70,11 +70,11 @@ export default function OpenRouterTestPage() {
   const selectedModelInfo = models.find(m => m.model_id === selectedModel);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-govbr-blue-dark via-govbr-blue to-govbr-blue-warm p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-white">OpenRouter Integration Test</h1>
-          <p className="text-slate-300">Teste de integração com múltiplos modelos de IA</p>
+          <h1 className="text-4xl font-bold text-white">AuroraGov - Teste OpenRouter</h1>
+          <p className="text-govbr-yellow">Teste de integração com múltiplos modelos de IA</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
