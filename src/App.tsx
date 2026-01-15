@@ -22,7 +22,7 @@ function AppContent() {
       <Route path="/esqueci-senha" element={!user ? <ForgotPasswordPage /> : <Navigate to="/" replace />} />
       <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
 
-      <Route path="/" element={<ProtectedRoute><AppLayout><HomePage /></AppLayout></ProtectedRoute>} />
+      <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
       <Route path="/consulta-juridica" element={<ProtectedRoute><AppLayout><ConsultaJuridicaPage /></AppLayout></ProtectedRoute>} />
       <Route path="/analise-documentos" element={<ProtectedRoute><AppLayout><AnaliseDocumentosPage /></AppLayout></ProtectedRoute>} />
       <Route path="/gerar-documentos" element={<ProtectedRoute><AppLayout><GeradorDocumentosPage /></AppLayout></ProtectedRoute>} />
