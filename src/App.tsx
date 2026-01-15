@@ -9,6 +9,7 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { AppLayout } from "./components/layout/AppLayout";
 import { useAuth } from "./contexts/AuthContext";
 
 function AppContent() {
@@ -21,10 +22,10 @@ function AppContent() {
       <Route path="/esqueci-senha" element={!user ? <ForgotPasswordPage /> : <Navigate to="/" replace />} />
       <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
 
-      <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-      <Route path="/consulta-juridica" element={<ProtectedRoute><ConsultaJuridicaPage /></ProtectedRoute>} />
-      <Route path="/analise-documentos" element={<ProtectedRoute><AnaliseDocumentosPage /></ProtectedRoute>} />
-      <Route path="/gerar-documentos" element={<ProtectedRoute><GeradorDocumentosPage /></ProtectedRoute>} />
+      <Route path="/" element={<ProtectedRoute><AppLayout><HomePage /></AppLayout></ProtectedRoute>} />
+      <Route path="/consulta-juridica" element={<ProtectedRoute><AppLayout><ConsultaJuridicaPage /></AppLayout></ProtectedRoute>} />
+      <Route path="/analise-documentos" element={<ProtectedRoute><AppLayout><AnaliseDocumentosPage /></AppLayout></ProtectedRoute>} />
+      <Route path="/gerar-documentos" element={<ProtectedRoute><AppLayout><GeradorDocumentosPage /></AppLayout></ProtectedRoute>} />
 
       <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />
     </Routes>

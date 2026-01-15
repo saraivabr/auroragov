@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, Copy, Download, Save, FileCheck, Sparkles } from 'lucide-react';
+import { FileText, Copy, Download, Save, FileCheck, Sparkles, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,6 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { exportDocumentToPDF, printDocument } from '@/lib/pdf-generator';
+import { documentTemplates } from '@/data/document-templates';
 
 interface Template {
   id: string;
@@ -255,14 +257,30 @@ ${user?.email || 'Nome do Servidor'}
     });
   };
 
-  const handleDownload = () => {
-    const element = document.createElement('a');
-    const file = new Blob([documentoGerado], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = `${tipoDocumento}_${numeroDocumento || 'documento'}.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+  const handleDownload = async () => {
+    await exportDocumentToPDF({
+      titulo: titulo || `${tipoDocumento.toUpperCase()}`,
+      tipo: tipoDocumento,
+      conteudo: documentoGerado,
+      destinatario,
+      numeroDocumento,
+      usuario: user?.email
+    });
+    toast({
+      title: 'Documento exportado!',
+      description: 'O documento foi baixado em formato HTML'
+    });
+  };
+
+  const handlePrint = async () => {
+    await printDocument({
+      titulo: titulo || `${tipoDocumento.toUpperCase()}`,
+      tipo: tipoDocumento,
+      conteudo: documentoGerado,
+      destinatario,
+      numeroDocumento,
+      usuario: user?.email
+    });
   };
 
   return (
@@ -396,13 +414,16 @@ ${user?.email || 'Nome do Servidor'}
                     <div className="flex gap-2">
                       {documentoGerado && (
                         <>
-                          <Button size="sm" variant="outline" onClick={handleCopiar}>
+                          <Button size="sm" variant="outline" onClick={handleCopiar} title="Copiar texto">
                             <Copy className="w-4 h-4" />
                           </Button>
-                          <Button size="sm" variant="outline" onClick={handleDownload}>
+                          <Button size="sm" variant="outline" onClick={handlePrint} title="Imprimir">
+                            <Printer className="w-4 h-4" />
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleDownload} title="Exportar HTML">
                             <Download className="w-4 h-4" />
                           </Button>
-                          <Button size="sm" variant="outline" onClick={handleSalvar}>
+                          <Button size="sm" variant="outline" onClick={handleSalvar} title="Salvar no banco">
                             <Save className="w-4 h-4" />
                           </Button>
                         </>
@@ -484,18 +505,32 @@ ${user?.email || 'Nome do Servidor'}
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {['Ofício Padrão', 'Memorando Interno', 'Parecer Técnico', 'Despacho Administrativo'].map((nome, idx) => (
-                    <div key={idx} className="p-4 border rounded-lg hover:border-purple-400 cursor-pointer transition-colors">
-                      <div className="flex items-center gap-3 mb-2">
+                  {documentTemplates.map((template) => (
+                    <div key={template.id} className="p-4 border rounded-lg hover:border-purple-400 cursor-pointer transition-colors">
+                      <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
                           <FileText className="w-5 h-5 text-purple-600" />
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{nome}</p>
-                          <p className="text-xs text-gray-500">Template oficial</p>
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900">{template.titulo}</p>
+                          <p className="text-xs text-gray-500 line-clamp-2">{template.descricao}</p>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline" className="w-full">
+                      <Badge variant="outline" className="text-xs mb-2 capitalize">{template.tipo}</Badge>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => {
+                          setTipoDocumento(template.tipo);
+                          setCorpo(template.template);
+                          setTitulo(template.titulo);
+                          toast({
+                            title: 'Template carregado!',
+                            description: `O template "${template.titulo}" foi carregado na aba "Gerar Documento"`
+                          });
+                        }}
+                      >
                         Usar Template
                       </Button>
                     </div>
