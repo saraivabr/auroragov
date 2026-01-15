@@ -4,6 +4,7 @@ import { HomePage } from "./pages/HomePage";
 import { ConsultaJuridicaPage } from "./pages/ConsultaJuridicaPage";
 import { AnaliseDocumentosPage } from "./pages/AnaliseDocumentosPage";
 import { GeradorDocumentosPage } from "./pages/GeradorDocumentosPage";
+import OpenRouterTestPage from "./pages/OpenRouterTestPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
@@ -26,6 +27,7 @@ function AppContent() {
       <Route path="/consulta-juridica" element={<ProtectedRoute><AppLayout><ConsultaJuridicaPage /></AppLayout></ProtectedRoute>} />
       <Route path="/analise-documentos" element={<ProtectedRoute><AppLayout><AnaliseDocumentosPage /></AppLayout></ProtectedRoute>} />
       <Route path="/gerar-documentos" element={<ProtectedRoute><AppLayout><GeradorDocumentosPage /></AppLayout></ProtectedRoute>} />
+      <Route path="/openrouter-test" element={<ProtectedRoute><OpenRouterTestPage /></ProtectedRoute>} />
 
       <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />
     </Routes>
