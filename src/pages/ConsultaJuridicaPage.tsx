@@ -60,92 +60,64 @@ export function ConsultaJuridicaPage() {
     setPergunta('');
     setIsLoading(true);
 
-    const respostas = [
-      {
-        texto: `A Lei nº 8.666/1993 estabelece normas gerais sobre licitações e contratos administrativos.
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-**Principais pontos:**
-- Todas as compras públicas devem seguir processo licitatório
-- Exceções: dispensa e inexigibilidade (art. 24 e 25)
-- Modalidades: concorrência, tomada de preços, convite, leilão e pregão
+      const response = await fetch(`${supabaseUrl}/functions/v1/consulta-juridica`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pergunta: userPergunta,
+          userId: user?.id || 'anonymous'
+        })
+      });
 
-**Jurisprudência:**
-TCU Acórdão 1234/2023 reforça a necessidade de justificativa detalhada para dispensa.`,
-        normas: [
-          { tipo: 'Lei', numero: '8.666/1993', artigo: '3º', ementa: 'Princípios da licitação' },
-          { tipo: 'Lei', numero: '14.133/2021', artigo: '11', ementa: 'Nova Lei de Licitações' }
-        ],
-        confiabilidade: 'alta'
-      },
-      {
-        texto: `De acordo com a Lei de Acesso à Informação (Lei 12.527/2011):
-
-**Prazos para resposta:**
-- Prazo normal: 20 dias (prorrogável por mais 10 dias)
-- Recurso à autoridade hierárquica: 10 dias
-- Recurso à CGU ou órgão equivalente: 10 dias
-
-**Importante:** A negativa de acesso deve ser sempre fundamentada.
-
-**Precedente:** STF MS 33.340 estabelece que o acesso é a regra, o sigilo a exceção.`,
-        normas: [
-          { tipo: 'Lei', numero: '12.527/2011', artigo: '11', ementa: 'Prazos de resposta' },
-          { tipo: 'Decreto', numero: '7.724/2012', artigo: '7º', ementa: 'Regulamenta a LAI' }
-        ],
-        confiabilidade: 'alta'
-      },
-      {
-        texto: `Sobre a LGPD (Lei Geral de Proteção de Dados - Lei 13.709/2018) no setor público:
-
-**Bases legais para tratamento:**
-- Execução de políticas públicas
-- Cumprimento de obrigação legal
-- Exercício regular de direitos
-
-**Atenção especial:**
-- Dados sensíveis exigem cuidado redobrado
-- Necessário mapeamento de dados pessoais
-- DPO (Encarregado) é obrigatório
-
-**Sanções:** ANPD pode aplicar advertências e multas de até 2% do faturamento (limitado a R$ 50 milhões).`,
-        normas: [
-          { tipo: 'Lei', numero: '13.709/2018', artigo: '7º', ementa: 'Bases legais para tratamento' },
-          { tipo: 'Lei', numero: '13.709/2018', artigo: '23', ementa: 'Tratamento de dados pelo Poder Público' }
-        ],
-        confiabilidade: 'alta'
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao processar consulta');
       }
-    ];
 
-    const respostaAleatoria = respostas[Math.floor(Math.random() * respostas.length)];
+      const result = await response.json();
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
+      const { data, error } = await supabase
+        .from('consultas_juridicas')
+        .insert([{
+          user_id: user?.id,
+          user_name: user?.email || 'Usuário',
+          pergunta: userPergunta,
+          resposta: result.resposta,
+          normas_relacionadas: result.normas_relacionadas,
+          confiabilidade: result.confiabilidade
+        }])
+        .select()
+        .single();
 
-    const { data, error } = await supabase
-      .from('consultas_juridicas')
-      .insert([{
-        user_id: user?.id,
-        user_name: user?.email || 'Usuário',
-        pergunta: userPergunta,
-        resposta: respostaAleatoria.texto,
-        normas_relacionadas: respostaAleatoria.normas,
-        confiabilidade: respostaAleatoria.confiabilidade
-      }])
-      .select()
-      .single();
+      if (error) {
+        console.error('Erro ao salvar consulta:', error);
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível salvar a consulta',
+          variant: 'destructive'
+        });
+        setIsLoading(false);
+        return;
+      }
 
-    if (error) {
-      console.error('Erro ao salvar consulta:', error);
+      setConsultas(prev => [...prev, data as Consulta]);
+    } catch (error) {
+      console.error('Erro na consulta:', error);
       toast({
         title: 'Erro',
-        description: 'Não foi possível salvar a consulta',
+        description: error instanceof Error ? error.message : 'Erro ao processar consulta',
         variant: 'destructive'
       });
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    setConsultas(prev => [...prev, data as Consulta]);
-    setIsLoading(false);
   };
 
   const handleFeedback = async (consultaId: string, feedback: 'positivo' | 'negativo') => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, Copy, Download, Save, FileCheck } from 'lucide-react';
+import { FileText, Copy, Download, Save, FileCheck, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -32,6 +32,7 @@ export function GeradorDocumentosPage() {
   const [assunto, setAssunto] = useState('');
   const [corpo, setCorpo] = useState('');
   const [documentoGerado, setDocumentoGerado] = useState('');
+  const [isImprovingText, setIsImprovingText] = useState(false);
 
   useEffect(() => {
     fetchTemplates();
@@ -57,6 +58,60 @@ export function GeradorDocumentosPage() {
       .limit(10);
 
     if (data) setDocumentos(data);
+  };
+
+  const handleMelhorarTexto = async () => {
+    if (!corpo.trim()) {
+      toast({
+        title: 'Campo vazio',
+        description: 'Digite algum texto no corpo do documento antes de melhorar',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsImprovingText(true);
+
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      const response = await fetch(`${supabaseUrl}/functions/v1/gerador-documentos`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tipoDocumento,
+          conteudo: corpo,
+          contexto: assunto || 'Documento oficial',
+          userId: user?.id || 'anonymous'
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao melhorar texto');
+      }
+
+      const result = await response.json();
+      setCorpo(result.texto_melhorado);
+
+      toast({
+        title: 'Texto melhorado!',
+        description: 'O texto foi reformulado seguindo padrões de redação oficial'
+      });
+    } catch (error) {
+      console.error('Erro ao melhorar texto:', error);
+      toast({
+        title: 'Erro',
+        description: error instanceof Error ? error.message : 'Erro ao melhorar texto',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsImprovingText(false);
+    }
   };
 
   const handleGerar = () => {
@@ -294,7 +349,28 @@ ${user?.email || 'Nome do Servidor'}
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Corpo do Texto</Label>
+                    <div className="flex items-center justify-between">
+                      <Label>Corpo do Texto</Label>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleMelhorarTexto}
+                        disabled={isImprovingText || !corpo.trim()}
+                        className="h-7"
+                      >
+                        {isImprovingText ? (
+                          <>
+                            <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin mr-1" />
+                            Melhorando...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-3 h-3 mr-1" />
+                            Melhorar com IA
+                          </>
+                        )}
+                      </Button>
+                    </div>
                     <Textarea
                       value={corpo}
                       onChange={(e) => setCorpo(e.target.value)}

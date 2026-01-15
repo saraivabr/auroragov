@@ -45,79 +45,74 @@ export function AnaliseDocumentosPage() {
 
     setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    const analiseSimulada = {
-      resumo: `Análise completa do ${tipoDocumento} "${titulo}":
+      const response = await fetch(`${supabaseUrl}/functions/v1/analise-documentos`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tipoDocumento,
+          titulo,
+          conteudo,
+          userId: user?.id || 'anonymous'
+        })
+      });
 
-O documento foi analisado considerando aspectos jurídicos, técnicos e de conformidade com a legislação vigente.
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erro ao analisar documento');
+      }
 
-**Caracterização:**
-- Tipo: ${tipoDocumento}
-- Complexidade: Média/Alta
-- Conformidade geral: 85%
+      const result = await response.json();
 
-**Principais achados:**
-- Documento estruturado de acordo com as normas
-- Identificadas cláusulas que requerem atenção especial
-- Prazos e condições estão dentro dos padrões legais`,
+      const { data, error } = await supabase
+        .from('analises_documentos')
+        .insert([{
+          user_id: user?.id,
+          user_name: user?.email || 'Usuário',
+          tipo_documento: tipoDocumento,
+          titulo,
+          conteudo_original: conteudo,
+          resumo: result.resumo,
+          pontos_criticos: result.pontos_criticos,
+          checklist: result.checklist,
+          riscos_identificados: result.riscos_identificados,
+          status: 'concluido'
+        }])
+        .select()
+        .single();
 
-      pontos_criticos: [
-        { item: 'Prazo de execução', descricao: 'O prazo de 30 dias pode ser insuficiente para cumprimento de todas as etapas', severidade: 'alta' },
-        { item: 'Garantia contratual', descricao: 'Percentual de garantia (5%) está no limite mínimo permitido', severidade: 'média' },
-        { item: 'Cláusula de reajuste', descricao: 'Índice de reajuste não foi especificado claramente', severidade: 'alta' }
-      ],
+      if (error) {
+        console.error('Erro ao salvar análise:', error);
+        toast({
+          title: 'Erro',
+          description: 'Não foi possível salvar a análise',
+          variant: 'destructive'
+        });
+        setIsLoading(false);
+        return;
+      }
 
-      checklist: [
-        { item: 'Identificação do órgão', status: 'conforme', observacao: 'Dados completos e corretos' },
-        { item: 'Objeto bem definido', status: 'conforme', observacao: 'Descrição clara e objetiva' },
-        { item: 'Dotação orçamentária', status: 'conforme', observacao: 'Devidamente indicada' },
-        { item: 'Prazo de vigência', status: 'atencao', observacao: 'Verificar compatibilidade com cronograma' },
-        { item: 'Critérios de julgamento', status: 'conforme', observacao: 'Bem estabelecidos' },
-        { item: 'Sanções administrativas', status: 'conforme', observacao: 'Previstas adequadamente' }
-      ],
-
-      riscos_identificados: [
-        { tipo: 'Operacional', descricao: 'Prazo apertado pode gerar atrasos', probabilidade: 'média', impacto: 'alto' },
-        { tipo: 'Jurídico', descricao: 'Cláusula de reajuste ambígua pode gerar litígio', probabilidade: 'baixa', impacto: 'médio' },
-        { tipo: 'Financeiro', descricao: 'Garantia baixa pode não cobrir inadimplência', probabilidade: 'baixa', impacto: 'alto' }
-      ]
-    };
-
-    const { data, error } = await supabase
-      .from('analises_documentos')
-      .insert([{
-        user_id: user?.id,
-        user_name: user?.email || 'Usuário',
-        tipo_documento: tipoDocumento,
-        titulo,
-        conteudo_original: conteudo,
-        resumo: analiseSimulada.resumo,
-        pontos_criticos: analiseSimulada.pontos_criticos,
-        checklist: analiseSimulada.checklist,
-        riscos_identificados: analiseSimulada.riscos_identificados,
-        status: 'concluido'
-      }])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Erro ao salvar análise:', error);
+      setAnaliseAtual(data as Analise);
+      toast({
+        title: 'Análise concluída!',
+        description: 'O documento foi analisado com sucesso'
+      });
+    } catch (error) {
+      console.error('Erro na análise:', error);
       toast({
         title: 'Erro',
-        description: 'Não foi possível salvar a análise',
+        description: error instanceof Error ? error.message : 'Erro ao analisar documento',
         variant: 'destructive'
       });
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    setAnaliseAtual(data as Analise);
-    setIsLoading(false);
-    toast({
-      title: 'Análise concluída!',
-      description: 'O documento foi analisado com sucesso'
-    });
   };
 
   const getSeveridadeColor = (sev: string) => {
