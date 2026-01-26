@@ -57,35 +57,35 @@ export function RealDashboard() {
       const todayISO = today.toISOString();
 
       // Fetch total consultas
-      const { count: totalConsultas } = await supabase
+      const { count: totalConsultas } = await (supabase as any)
         .from('consultas_juridicas')
         .select('*', { count: 'exact', head: true });
 
       // Fetch consultas hoje
-      const { count: consultasHoje } = await supabase
+      const { count: consultasHoje } = await (supabase as any)
         .from('consultas_juridicas')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', todayISO);
 
       // Fetch total analises
-      const { count: totalAnalises } = await supabase
+      const { count: totalAnalises } = await (supabase as any)
         .from('analises_documentos')
         .select('*', { count: 'exact', head: true });
 
       // Fetch analises hoje
-      const { count: analisesHoje } = await supabase
+      const { count: analisesHoje } = await (supabase as any)
         .from('analises_documentos')
         .select('*', { count: 'exact', head: true })
         .gte('created_at', todayISO);
 
       // Fetch total documentos
-      const { count: totalDocumentos } = await supabase
+      const { count: totalDocumentos } = await (supabase as any)
         .from('documentos_oficiais')
         .select('*', { count: 'exact', head: true })
         .eq('is_template', false);
 
       // Fetch documentos hoje
-      const { count: documentosHoje } = await supabase
+      const { count: documentosHoje } = await (supabase as any)
         .from('documentos_oficiais')
         .select('*', { count: 'exact', head: true })
         .eq('is_template', false)
@@ -101,19 +101,19 @@ export function RealDashboard() {
       });
 
       // Fetch recent activities
-      const { data: consultas } = await supabase
+      const { data: consultas } = await (supabase as any)
         .from('consultas_juridicas')
         .select('id, pergunta, created_at')
         .order('created_at', { ascending: false })
         .limit(3);
 
-      const { data: analises } = await supabase
+      const { data: analises } = await (supabase as any)
         .from('analises_documentos')
         .select('id, titulo, created_at')
         .order('created_at', { ascending: false })
         .limit(3);
 
-      const { data: documentos } = await supabase
+      const { data: documentos } = await (supabase as any)
         .from('documentos_oficiais')
         .select('id, titulo, created_at')
         .eq('is_template', false)
@@ -121,19 +121,19 @@ export function RealDashboard() {
         .limit(3);
 
       const activities: RecentActivity[] = [
-        ...(consultas?.map(c => ({ 
+        ...(consultas?.map((c: any) => ({ 
           id: c.id, 
           type: 'consulta' as const, 
           title: c.pergunta.substring(0, 60) + '...', 
           created_at: c.created_at 
         })) || []),
-        ...(analises?.map(a => ({ 
+        ...(analises?.map((a: any) => ({ 
           id: a.id, 
           type: 'analise' as const, 
           title: a.titulo, 
           created_at: a.created_at 
         })) || []),
-        ...(documentos?.map(d => ({ 
+        ...(documentos?.map((d: any) => ({ 
           id: d.id, 
           type: 'documento' as const, 
           title: d.titulo, 
