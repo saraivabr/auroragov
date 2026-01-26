@@ -83,10 +83,40 @@ IMPORTANTE: Sempre informe que esta é uma orientação geral e que para casos e
     const data = await response.json();
     const resposta = data.choices[0].message.content;
 
-    const normasRelacionadas = [
-      { tipo: 'Lei', numero: '8.666/1993', artigo: '3º', ementa: 'Princípios da licitação' },
-      { tipo: 'Lei', numero: '14.133/2021', artigo: '11', ementa: 'Nova Lei de Licitações' }
-    ];
+    // Try to extract legal references from the AI response
+    const normasRelacionadas: any[] = [];
+    
+    // Pattern to match law references like "Lei 8.666/1993" or "Lei nº 14.133/2021"
+    const leiPattern = /Lei\s+(?:nº\s*)?(\d+(?:\.?\d+)*\/\d{4})/gi;
+    const leiMatches = resposta.matchAll(leiPattern);
+    
+    for (const match of leiMatches) {
+      const numero = match[1];
+      if (!normasRelacionadas.find(n => n.numero === numero)) {
+        normasRelacionadas.push({
+          tipo: 'Lei',
+          numero: numero,
+          artigo: '',
+          ementa: `Referenciada na resposta`
+        });
+      }
+    }
+    
+    // Pattern to match decree references like "Decreto 10.024/2019"
+    const decretoPattern = /Decreto\s+(?:nº\s*)?(\d+(?:\.?\d+)*\/\d{4})/gi;
+    const decretoMatches = resposta.matchAll(decretoPattern);
+    
+    for (const match of decretoMatches) {
+      const numero = match[1];
+      if (!normasRelacionadas.find(n => n.numero === numero)) {
+        normasRelacionadas.push({
+          tipo: 'Decreto',
+          numero: numero,
+          artigo: '',
+          ementa: `Referenciado na resposta`
+        });
+      }
+    }
 
     return new Response(
       JSON.stringify({

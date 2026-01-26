@@ -121,18 +121,54 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addAuditEntry('Mensagem Enviada', content.substring(0, 100), selectedModel);
 
     setIsLoading(true);
-    setTimeout(() => {
+    
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      // Use the consulta-juridica edge function for general queries
+      const response = await fetch(`${supabaseUrl}/functions/v1/consulta-juridica`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pergunta: content,
+          userId: 'chat-user'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao processar mensagem');
+      }
+
+      const result = await response.json();
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `Esta é uma resposta simulada do ${selectedModel.toUpperCase()}.\n\nEm um ambiente de produção, esta resposta seria gerada pela API do modelo de IA selecionado. A resposta seria processada de forma segura, com criptografia end-to-end e registro completo na trilha de auditoria.\n\nTodos os dados são tratados em conformidade com a LGPD e demais regulamentações aplicáveis ao setor público brasileiro.`,
+        content: result.resposta || 'Desculpe, não foi possível gerar uma resposta.',
         model: selectedModel,
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, aiMessage]);
       addAuditEntry('Resposta Recebida', `Resposta do ${selectedModel}`, selectedModel);
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.',
+        model: selectedModel,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      addAuditEntry('Erro', 'Erro ao processar mensagem', selectedModel);
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   const handleModelChange = (model: AIModel) => {
