@@ -1,5 +1,17 @@
-import { Dashboard } from '@/components/dashboard/Dashboard';
+import { RealDashboard } from '@/components/dashboard/RealDashboard';
+import { IconSidebar } from '@/components/dashboard/IconSidebar';
+import { Sidebar } from '@/components/dashboard/Sidebar';
+import { Toaster } from '@/components/ui/toaster';
 
 export function HomePage() {
-  return <Dashboard />;
+  return (
+    <>
+      <div className="flex min-h-screen bg-white">
+        <IconSidebar />
+        <Sidebar />
+        <RealDashboard />
+      </div>
+      <Toaster />
+    </>
+  );
 }
