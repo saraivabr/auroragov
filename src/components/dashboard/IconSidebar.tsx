@@ -25,7 +25,7 @@ export function IconSidebar({ onMenuClick }: IconSidebarProps) {
   return (
     <div className="w-[60px] h-screen bg-[#141414] border-r border-gray-800 flex flex-col items-center py-4">
       <div className="mb-6">
-        <button className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+        <button className="w-10 h-10 bg-gradient-to-br from-govbr-blue to-govbr-blue-vivid rounded-lg flex items-center justify-center">
           <span className="text-white text-sm font-bold">A</span>
         </button>
       </div>

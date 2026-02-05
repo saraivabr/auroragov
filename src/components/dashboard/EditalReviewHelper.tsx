@@ -11,11 +11,11 @@ interface EditalReviewHelperProps {
 
 export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
   return (
-    <Card className="glass-effect border-cyan-500/30">
+    <Card className="glass-effect border-govbr-blue-light/30">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
-            <FileText className="w-5 h-5 text-cyan-400" />
+          <div className="w-10 h-10 rounded-lg bg-govbr-yellow/20 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-govbr-yellow" />
           </div>
           <div className="flex-1">
             <CardTitle className="text-white">Assistente de Revisão de Edital</CardTitle>
@@ -26,8 +26,8 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Alert className="bg-cyan-500/10 border-cyan-500/30">
-          <Info className="w-4 h-4 text-cyan-400" />
+        <Alert className="bg-govbr-blue/10 border-govbr-blue-light/30">
+          <Info className="w-4 h-4 text-govbr-yellow" />
           <AlertDescription className="text-gray-300">
             Esta ferramenta analisa editais considerando as principais legislações vigentes e identifica
             potenciais problemas jurídicos, técnicos e administrativos.
@@ -36,7 +36,7 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
 
         <div className="space-y-3">
           <h4 className="text-sm font-semibold text-white flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+            <CheckCircle2 className="w-4 h-4 text-govbr-yellow" />
             O que será analisado:
           </h4>
           
@@ -50,21 +50,21 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
                 </div>
                 <ul className="text-xs text-gray-400 space-y-1.5 ml-6">
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Conformidade com Lei 8.666/93 e Lei 14.133/21</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Verificação de elementos obrigatórios do edital</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Adequação da modalidade ao objeto e valor</span>
                   </li>
                 </ul>
               </div>
 
-              <Separator className="bg-cyan-500/20" />
+              <Separator className="bg-govbr-yellow/20" />
 
               {/* Análise Jurídica */}
               <div className="space-y-2">
@@ -74,21 +74,21 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
                 </div>
                 <ul className="text-xs text-gray-400 space-y-1.5 ml-6">
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Identificação de cláusulas restritivas ou discriminatórias</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Análise de segurança jurídica e proporcionalidade</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Verificação de penalidades e sanções previstas</span>
                   </li>
                 </ul>
               </div>
 
-              <Separator className="bg-cyan-500/20" />
+              <Separator className="bg-govbr-yellow/20" />
 
               {/* Análise Técnica */}
               <div className="space-y-2">
@@ -98,21 +98,21 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
                 </div>
                 <ul className="text-xs text-gray-400 space-y-1.5 ml-6">
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Clareza e objetividade dos requisitos técnicos</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Adequação dos prazos de execução e pagamento</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Viabilidade das especificações e critérios</span>
                   </li>
                 </ul>
               </div>
 
-              <Separator className="bg-cyan-500/20" />
+              <Separator className="bg-govbr-yellow/20" />
 
               {/* Pontos de Atenção */}
               <div className="space-y-2">
@@ -122,15 +122,15 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
                 </div>
                 <ul className="text-xs text-gray-400 space-y-1.5 ml-6">
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Tratamento diferenciado para ME/EPP</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Requisitos de sustentabilidade ambiental</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-cyan-400 mt-0.5">•</span>
+                    <span className="text-govbr-yellow mt-0.5">•</span>
                     <span>Critérios de aceitabilidade e desempate</span>
                   </li>
                 </ul>
@@ -139,7 +139,7 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
           </ScrollArea>
         </div>
 
-        <Separator className="bg-cyan-500/20" />
+        <Separator className="bg-govbr-yellow/20" />
 
         <div className="space-y-2">
           <h4 className="text-sm font-semibold text-white">Resultado da Análise</h4>
@@ -167,7 +167,7 @@ export function EditalReviewHelper({ onUseTemplate }: EditalReviewHelperProps) {
 
         <button
           onClick={onUseTemplate}
-          className="w-full mt-4 py-2.5 px-4 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+          className="w-full mt-4 py-2.5 px-4 rounded-lg bg-govbr-blue hover:bg-govbr-blue-vivid text-white font-medium text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
         >
           <FileText className="w-4 h-4" />
           Usar Template de Revisão

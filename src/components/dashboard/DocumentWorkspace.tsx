@@ -38,7 +38,7 @@ export function DocumentWorkspace({ messages, onClose }: DocumentWorkspaceProps)
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-fade-in">
       <div className="w-full max-w-7xl h-[90vh] glass-effect rounded-lg overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
+        <div className="flex items-center justify-between p-6 border-b border-govbr-blue-light/20">
           <div>
             <h2 className="text-xl font-bold text-white">Área de Trabalho</h2>
             <p className="text-sm text-gray-400">Edite e refine o conteúdo gerado pela IA</p>
@@ -65,7 +65,7 @@ export function DocumentWorkspace({ messages, onClose }: DocumentWorkspaceProps)
                 variant="outline"
                 size="sm"
                 onClick={handleCopy}
-                className="border-gray-700 hover:border-cyan-500/50"
+                className="border-gray-700 hover:border-govbr-yellow/50"
               >
                 {copied ? (
                   <>
@@ -97,7 +97,7 @@ export function DocumentWorkspace({ messages, onClose }: DocumentWorkspaceProps)
                 variant="default"
                 size="sm"
                 onClick={handleSave}
-                className="bg-cyan-500 hover:bg-cyan-600"
+                className="bg-govbr-blue hover:bg-govbr-blue-vivid"
               >
                 <Save className="w-3 h-3 mr-2" />
                 Salvar

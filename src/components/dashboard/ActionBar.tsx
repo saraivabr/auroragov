@@ -24,7 +24,7 @@ export function ActionBar({
   hasMessages
 }: ActionBarProps) {
   return (
-    <div className="border-b border-cyan-500/20 bg-[#0A1628]/60 backdrop-blur-md px-6 py-3">
+    <div className="border-b border-govbr-blue-light/20 bg-[#0A1628]/60 backdrop-blur-md px-6 py-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Button
@@ -32,7 +32,7 @@ export function ActionBar({
             size="sm"
             onClick={onOpenDocument}
             disabled={!hasMessages}
-            className="text-gray-300 hover:text-white hover:bg-cyan-500/10"
+            className="text-gray-300 hover:text-white hover:bg-govbr-yellow/10"
           >
             <FileText className="w-4 h-4 mr-2" />
             Área de Trabalho
@@ -42,7 +42,7 @@ export function ActionBar({
             variant="ghost"
             size="sm"
             onClick={onOpenComparison}
-            className="text-gray-300 hover:text-white hover:bg-cyan-500/10"
+            className="text-gray-300 hover:text-white hover:bg-govbr-yellow/10"
           >
             <GitCompare className="w-4 h-4 mr-2" />
             Comparar Modelos
@@ -78,7 +78,7 @@ export function ActionBar({
                 variant="ghost"
                 size="sm"
                 disabled={!hasMessages}
-                className="text-gray-300 hover:text-white hover:bg-cyan-500/10"
+                className="text-gray-300 hover:text-white hover:bg-govbr-yellow/10"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Exportar
@@ -101,7 +101,7 @@ export function ActionBar({
             variant="ghost"
             size="sm"
             disabled={!hasMessages}
-            className="text-gray-300 hover:text-white hover:bg-cyan-500/10"
+            className="text-gray-300 hover:text-white hover:bg-govbr-yellow/10"
           >
             <Share2 className="w-4 h-4 mr-2" />
             Compartilhar

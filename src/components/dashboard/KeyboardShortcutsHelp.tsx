@@ -34,16 +34,16 @@ export function KeyboardShortcutsHelp() {
         <Button
           variant="ghost"
           size="sm"
-          className="text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+          className="text-gray-400 hover:text-govbr-yellow/80 hover:bg-govbr-yellow/10"
           title="Atalhos de Teclado"
         >
           <Keyboard className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md bg-[#0A1628] border-cyan-500/30">
+      <DialogContent className="max-w-md bg-[#0A1628] border-govbr-blue-light/30">
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-2">
-            <Keyboard className="w-5 h-5 text-cyan-400" />
+            <Keyboard className="w-5 h-5 text-govbr-yellow" />
             Atalhos de Teclado
           </DialogTitle>
         </DialogHeader>
@@ -51,7 +51,7 @@ export function KeyboardShortcutsHelp() {
         <div className="space-y-6 py-4">
           {shortcuts.map((category) => (
             <div key={category.category} className="space-y-3">
-              <h4 className="text-sm font-medium text-cyan-400 uppercase tracking-wider">
+              <h4 className="text-sm font-medium text-govbr-yellow uppercase tracking-wider">
                 {category.category}
               </h4>
               

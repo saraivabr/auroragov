@@ -57,7 +57,7 @@ export function MainContent() {
             onClick={() => setShowModelSelector(!showModelSelector)}
             className="px-4 py-2 bg-[#3a3a3a] hover:bg-[#454545] border border-gray-700 rounded-lg flex items-center gap-2 transition-colors"
           >
-            <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-purple-600 rounded flex items-center justify-center text-sm">
+            <div className="w-6 h-6 bg-gradient-to-br from-govbr-blue to-govbr-blue-vivid rounded flex items-center justify-center text-sm">
               ⚙️
             </div>
             <span className="text-white font-medium text-sm">ONE</span>
@@ -72,7 +72,7 @@ export function MainContent() {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <Button className="bg-cyan-500 hover:bg-cyan-600 text-white">
+          <Button className="bg-govbr-blue hover:bg-govbr-blue-vivid text-white">
             Saiba Mais
             <span className="ml-2">→</span>
           </Button>
@@ -106,7 +106,7 @@ export function MainContent() {
                   key={suggestion.id}
                   className="flex items-center gap-3 px-6 py-4 bg-[#3a3a3a] hover:bg-[#454545] border border-gray-700 rounded-lg transition-all group"
                 >
-                  <div className="text-gray-400 group-hover:text-cyan-500 transition-colors">
+                  <div className="text-gray-400 group-hover:text-govbr-yellow transition-colors">
                     {suggestion.icon}
                   </div>
                   <span className="text-gray-300 text-sm font-medium">
