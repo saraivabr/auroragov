@@ -80,7 +80,7 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    const { data: modelInfo } = await supabase
+    let { data: modelInfo } = await supabase
       .from("ai_models")
       .select("*")
       .eq("model_id", selectedModelId)
@@ -94,11 +94,7 @@ Deno.serve(async (req: Request) => {
         .eq("model_id", selectedModelId)
         .single();
 
-      if (fallbackModel) {
-        modelInfo.pricing_input = fallbackModel.pricing_input;
-        modelInfo.pricing_output = fallbackModel.pricing_output;
-        modelInfo.provider = fallbackModel.provider;
-      }
+      modelInfo = fallbackModel;
     }
 
     const { data: userMessage, error: userMessageError } = await supabase
