@@ -111,6 +111,15 @@ export function useChat() {
   const sendMessage = async (content: string) => {
     if (!content.trim()) return;
 
+    if (!user?.id) {
+      toast({
+        title: 'Erro de autenticação',
+        description: 'Você precisa estar logado para enviar mensagens.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     let conversationId = currentConversationId;
 
     if (!conversationId) {
@@ -131,20 +140,6 @@ export function useChat() {
     setIsLoading(true);
 
     try {
-      const { data: userMsgData, error: userMsgError } = await supabase
-        .from('messages')
-        .insert({
-          conversation_id: conversationId,
-          role: 'user',
-          content,
-          model: selectedModel,
-          model_used: selectedModel,
-        })
-        .select()
-        .single();
-
-      if (userMsgError) throw userMsgError;
-
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-with-agent`;
 
       const response = await fetch(apiUrl, {
@@ -155,13 +150,16 @@ export function useChat() {
         },
         body: JSON.stringify({
           message: content,
-          conversation_id: conversationId,
-          model: selectedModel,
+          conversationId: conversationId,
+          userId: user.id,
+          modelId: selectedModel,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao processar mensagem');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Erro na resposta da API:', errorData);
+        throw new Error(errorData.error || 'Erro ao processar mensagem');
       }
 
       const result = await response.json();
@@ -170,24 +168,11 @@ export function useChat() {
         id: crypto.randomUUID(),
         role: 'assistant',
         content: result.response || result.message || 'Desculpe, não consegui processar sua mensagem.',
-        model: selectedModel,
+        model: result.model_used || selectedModel,
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-
-      await supabase
-        .from('messages')
-        .insert({
-          conversation_id: conversationId,
-          role: 'assistant',
-          content: assistantMessage.content,
-          model: selectedModel,
-          model_used: selectedModel,
-          tokens_input: result.usage?.prompt_tokens || 0,
-          tokens_output: result.usage?.completion_tokens || 0,
-          cost_usd: result.usage?.total_cost || 0,
-        });
 
       await supabase
         .from('conversations')
@@ -196,9 +181,12 @@ export function useChat() {
 
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
+
+      const errorMessage = error instanceof Error ? error.message : 'Não foi possível enviar sua mensagem. Tente novamente.';
+
       toast({
         title: 'Erro ao enviar mensagem',
-        description: 'Não foi possível enviar sua mensagem. Tente novamente.',
+        description: errorMessage,
         variant: 'destructive',
       });
 
