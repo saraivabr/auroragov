@@ -166,7 +166,7 @@ export function RealDashboard() {
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'consulta': return <MessageSquare className="w-4 h-4 text-blue-500" />;
-      case 'analise': return <FileSearch className="w-4 h-4 text-purple-500" />;
+      case 'analise': return <FileSearch className="w-4 h-4 text-govbr-yellow" />;
       case 'documento': return <FileText className="w-4 h-4 text-green-500" />;
       default: return null;
     }
@@ -236,7 +236,7 @@ export function RealDashboard() {
               <CardTitle className="text-sm font-medium">
                 Análises de Documentos
               </CardTitle>
-              <FileSearch className="h-4 w-4 text-purple-600" />
+              <FileSearch className="h-4 w-4 text-govbr-yellow" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalAnalises}</div>
@@ -341,13 +341,13 @@ export function RealDashboard() {
 
               <Button
                 onClick={() => navigate('/analise-documentos')}
-                className="h-auto flex-col items-start p-4 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200"
+                className="h-auto flex-col items-start p-4 bg-govbr-blue/5 hover:bg-govbr-blue/10 text-govbr-blue-dark border border-govbr-blue-light"
                 variant="outline"
               >
                 <FileSearch className="w-6 h-6 mb-2" />
                 <div className="text-left">
                   <div className="font-semibold">Análise de Documentos</div>
-                  <div className="text-xs text-purple-700">
+                  <div className="text-xs text-govbr-blue">
                     Analise editais e contratos
                   </div>
                 </div>

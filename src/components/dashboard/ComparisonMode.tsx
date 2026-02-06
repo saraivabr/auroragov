@@ -42,7 +42,7 @@ export function ComparisonMode({ onClose }: ComparisonModeProps) {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-fade-in">
       <div className="w-full max-w-7xl h-[90vh] glass-effect rounded-lg overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-cyan-500/20">
+        <div className="flex items-center justify-between p-6 border-b border-govbr-blue-light/20">
           <div>
             <h2 className="text-xl font-bold text-white">Comparação de Modelos</h2>
             <p className="text-sm text-gray-400">Execute o mesmo prompt em múltiplos modelos de IA</p>
@@ -58,19 +58,19 @@ export function ComparisonMode({ onClose }: ComparisonModeProps) {
         </div>
 
         {/* Prompt Input */}
-        <div className="p-6 border-b border-cyan-500/20">
+        <div className="p-6 border-b border-govbr-blue-light/20">
           <Textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Digite o prompt que deseja comparar entre os modelos..."
-            className="min-h-[100px] resize-none bg-gray-900/50 border-gray-700 focus:border-cyan-500 text-white"
+            className="min-h-[100px] resize-none bg-gray-900/50 border-gray-700 focus:border-govbr-yellow text-white"
             disabled={isLoading}
           />
           <div className="flex justify-end mt-3">
             <Button
               onClick={handleCompare}
               disabled={!prompt.trim() || isLoading}
-              className="bg-cyan-500 hover:bg-cyan-600"
+              className="bg-govbr-blue hover:bg-govbr-blue-vivid"
             >
               {isLoading ? (
                 <>
@@ -102,7 +102,7 @@ export function ComparisonMode({ onClose }: ComparisonModeProps) {
                   <TabsTrigger
                     key={modelId}
                     value={modelId}
-                    className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-400"
+                    className="data-[state=active]:bg-govbr-blue/20 data-[state=active]:text-govbr-yellow"
                   >
                     {AI_MODELS[modelId].name}
                     {results[modelId] && (
@@ -125,7 +125,7 @@ export function ComparisonMode({ onClose }: ComparisonModeProps) {
                             <p className="text-xs text-gray-400">{AI_MODELS[modelId].specialty}</p>
                           </div>
                           {isLoading && !results[modelId] && (
-                            <Loader2 className="w-4 h-4 text-cyan-400 animate-spin" />
+                            <Loader2 className="w-4 h-4 text-govbr-yellow animate-spin" />
                           )}
                         </div>
                       </div>

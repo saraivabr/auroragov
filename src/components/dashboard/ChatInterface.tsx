@@ -24,7 +24,7 @@ const MessageItem = memo(({ message }: { message: Message }) => {
   return (
     <div className={cn(
       'p-4 rounded-lg animate-in slide-in-from-bottom-2',
-      isUser ? 'bg-cyan-500/5 border border-cyan-500/20' : 'bg-gray-800/30'
+      isUser ? 'bg-govbr-blue/5 border border-govbr-blue-light/20' : 'bg-gray-800/30'
     )}>
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -32,7 +32,7 @@ const MessageItem = memo(({ message }: { message: Message }) => {
             {isUser ? 'Você' : modelInfo.name}
           </span>
           {!isUser && (
-            <Badge variant="outline" className="text-xs border-cyan-500/50 text-cyan-400">
+            <Badge variant="outline" className="text-xs border-govbr-yellow/50 text-govbr-yellow">
               {modelInfo.specialty}
             </Badge>
           )}
@@ -91,7 +91,7 @@ export const ChatInterface = memo(function ChatInterface({
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center space-y-4 max-w-md">
-              <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-govbr-blue to-govbr-blue-vivid flex items-center justify-center">
                 <div className="w-10 h-10 border-2 border-white rounded-full relative">
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full"></div>
                 </div>
@@ -115,7 +115,7 @@ export const ChatInterface = memo(function ChatInterface({
             {isLoading && (
               <div className="p-4 rounded-lg bg-gray-800/30 animate-in slide-in-from-bottom-2">
                 <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline" className="text-xs border-cyan-500/50 text-cyan-400">
+                  <Badge variant="outline" className="text-xs border-govbr-yellow/50 text-govbr-yellow">
                     {AI_MODELS[selectedModel].name}
                   </Badge>
                 </div>
@@ -130,7 +130,7 @@ export const ChatInterface = memo(function ChatInterface({
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="border-t border-cyan-500/20 bg-[#0A1628]/80 backdrop-blur-md p-6">
+      <div className="border-t border-govbr-blue-light/20 bg-[#0A1628]/80 backdrop-blur-md p-6">
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="relative">
             <Textarea
@@ -139,7 +139,7 @@ export const ChatInterface = memo(function ChatInterface({
               onChange={(e) => onPromptChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Digite sua solicitação ou selecione um template..."
-              className="min-h-[100px] resize-none bg-gray-900/50 border-gray-700 focus:border-cyan-500 text-white placeholder:text-gray-500"
+              className="min-h-[100px] resize-none bg-gray-900/50 border-gray-700 focus:border-govbr-yellow text-white placeholder:text-gray-500"
               disabled={isLoading}
             />
           </div>
@@ -153,7 +153,7 @@ export const ChatInterface = memo(function ChatInterface({
             <Button
               type="submit"
               disabled={!promptValue.trim() || isLoading}
-              className="bg-cyan-500 hover:bg-cyan-600 text-white gap-2"
+              className="bg-govbr-blue hover:bg-govbr-blue-vivid text-white gap-2"
             >
               {isLoading ? (
                 <>

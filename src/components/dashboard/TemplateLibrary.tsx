@@ -42,13 +42,13 @@ export function TemplateLibrary({ onSelectTemplate: onSelectTemplateProp }: Temp
             <Button 
               variant="ghost" 
               size="sm"
-              className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+              className="text-govbr-yellow hover:text-govbr-yellow/80 hover:bg-govbr-yellow/10"
             >
               <HelpCircle className="w-4 h-4 mr-2" />
               Ajuda Edital
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl bg-[#0A1628] border-cyan-500/30">
+          <DialogContent className="max-w-2xl bg-[#0A1628] border-govbr-blue-light/30">
             <DialogHeader>
               <DialogTitle className="text-white">Assistente de Revisão de Edital</DialogTitle>
             </DialogHeader>
@@ -128,7 +128,7 @@ export function TemplateLibrary({ onSelectTemplate: onSelectTemplateProp }: Temp
           {/* All Templates by Category */}
           {categories.map((category) => (
             <div key={category} className="space-y-2">
-              <h4 className="text-xs font-medium text-cyan-400 uppercase tracking-wider">
+              <h4 className="text-xs font-medium text-govbr-yellow uppercase tracking-wider">
                 {category}
               </h4>
               
@@ -137,11 +137,11 @@ export function TemplateLibrary({ onSelectTemplate: onSelectTemplateProp }: Temp
                   <button
                     key={template.id}
                     onClick={() => onSelectTemplate(template)}
-                    className="w-full p-3 rounded-lg border border-gray-700 bg-gray-800/50 hover:border-cyan-500/50 hover:bg-gray-800 transition-all duration-200 text-left group relative"
+                    className="w-full p-3 rounded-lg border border-gray-700 bg-gray-800/50 hover:border-govbr-yellow/50 hover:bg-gray-800 transition-all duration-200 text-left group relative"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-start gap-3 flex-1">
-                        <FileText className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
+                        <FileText className="w-4 h-4 text-govbr-yellow mt-0.5 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-medium text-sm text-white">

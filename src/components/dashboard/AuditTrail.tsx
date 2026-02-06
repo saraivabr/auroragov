@@ -12,12 +12,12 @@ interface AuditTrailProps {
 // Memoized individual audit entry component
 const AuditEntryItem = memo(({ entry }: { entry: AuditEntry }) => (
   <div className="relative pl-6 pb-8 last:pb-4">
-    <div className="absolute left-0 top-0 w-2 h-2 rounded-full bg-cyan-500"></div>
-    <div className="absolute left-[3px] top-2 w-px h-full bg-cyan-500/20"></div>
+    <div className="absolute left-0 top-0 w-2 h-2 rounded-full bg-govbr-yellow"></div>
+    <div className="absolute left-[3px] top-2 w-px h-full bg-govbr-yellow/20"></div>
     
     <div className="glass-effect rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-cyan-400">
+        <span className="text-xs font-medium text-govbr-yellow">
           {entry.action}
         </span>
         <span className="text-xs text-gray-500">
@@ -34,7 +34,7 @@ const AuditEntryItem = memo(({ entry }: { entry: AuditEntry }) => (
       </div>
       
       {entry.model && (
-        <Badge variant="outline" className="text-xs border-cyan-500/30 text-cyan-400">
+        <Badge variant="outline" className="text-xs border-govbr-yellow/30 text-govbr-yellow">
           {entry.model}
         </Badge>
       )}
@@ -56,7 +56,7 @@ export const AuditTrail = memo(function AuditTrail({ entries }: AuditTrailProps)
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-6 border-b border-cyan-500/20">
+      <div className="p-6 border-b border-govbr-yellow/20">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
             Trilha de Auditoria
@@ -71,7 +71,7 @@ export const AuditTrail = memo(function AuditTrail({ entries }: AuditTrailProps)
             variant="outline"
             size="sm"
             onClick={() => handleExport('pdf')}
-            className="flex-1 text-xs border-gray-700 hover:border-cyan-500/50"
+            className="flex-1 text-xs border-gray-700 hover:border-govbr-yellow/50"
           >
             <Download className="w-3 h-3 mr-1" />
             PDF
@@ -80,7 +80,7 @@ export const AuditTrail = memo(function AuditTrail({ entries }: AuditTrailProps)
             variant="outline"
             size="sm"
             onClick={() => handleExport('csv')}
-            className="flex-1 text-xs border-gray-700 hover:border-cyan-500/50"
+            className="flex-1 text-xs border-gray-700 hover:border-govbr-yellow/50"
           >
             <Download className="w-3 h-3 mr-1" />
             CSV

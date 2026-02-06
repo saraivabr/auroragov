@@ -278,7 +278,7 @@ ${user?.email || 'Nome do Servidor'}
       <div className="container mx-auto px-6 py-8 max-w-7xl">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-govbr-blue to-govbr-blue-vivid flex items-center justify-center text-white">
               <FileText className="w-6 h-6" />
             </div>
             <div>
@@ -389,7 +389,7 @@ ${user?.email || 'Nome do Servidor'}
 
                   <Button
                     onClick={handleGerar}
-                    className="w-full bg-purple-600 hover:bg-purple-700"
+                    className="w-full bg-govbr-blue hover:bg-govbr-blue-vivid"
                   >
                     <FileCheck className="w-4 h-4 mr-2" />
                     Gerar Documento
@@ -463,8 +463,8 @@ ${user?.email || 'Nome do Servidor'}
                         className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                            <FileText className="w-5 h-5 text-purple-600" />
+                          <div className="w-10 h-10 rounded-lg bg-govbr-blue/10 flex items-center justify-center">
+                            <FileText className="w-5 h-5 text-govbr-blue" />
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">{doc.titulo}</p>
@@ -496,10 +496,10 @@ ${user?.email || 'Nome do Servidor'}
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {documentTemplates.map((template) => (
-                    <div key={template.id} className="p-4 border rounded-lg hover:border-purple-400 cursor-pointer transition-colors">
+                    <div key={template.id} className="p-4 border rounded-lg hover:border-govbr-blue-light cursor-pointer transition-colors">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                          <FileText className="w-5 h-5 text-purple-600" />
+                        <div className="w-10 h-10 rounded-lg bg-govbr-blue/10 flex items-center justify-center">
+                          <FileText className="w-5 h-5 text-govbr-blue" />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{template.titulo}</p>

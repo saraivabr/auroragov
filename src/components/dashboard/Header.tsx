@@ -39,7 +39,7 @@ export const Header = memo(function Header() {
                 variant="ghost"
                 size="sm"
                 onClick={restartTour}
-                className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+                className="text-govbr-yellow hover:text-govbr-yellow/80 hover:bg-govbr-yellow/10"
                 title="Revisar Tutorial"
               >
                 <HelpCircle className="w-4 h-4" />
@@ -47,9 +47,9 @@ export const Header = memo(function Header() {
             </div>
             
             <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg glass-effect">
-              <Shield className="w-4 h-4 text-cyan-400" />
+              <Shield className="w-4 h-4 text-govbr-yellow" />
               <div className="text-xs">
-                <div className="text-cyan-400 font-medium">Criptografia Ativa</div>
+                <div className="text-govbr-yellow font-medium">Criptografia Ativa</div>
                 <div className="text-gray-400">LGPD • ISO 27001</div>
               </div>
             </div>

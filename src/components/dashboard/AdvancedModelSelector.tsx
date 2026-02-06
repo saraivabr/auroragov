@@ -26,11 +26,11 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
   const [expandedSections, setExpandedSections] = useState<string[]>(['recomendados']);
 
   const textModels: Model[] = [
-    { id: 'one', name: 'ONE', icon: '⚙️', badge: 'most-used', color: 'from-purple-500 to-purple-600' },
+    { id: 'one', name: 'ONE', icon: '⚙️', badge: 'most-used', color: 'from-govbr-blue to-govbr-blue-vivid' },
     { id: 'gpt-5', name: 'GPT-5', icon: '🤖', badge: 'new', color: 'from-teal-500 to-teal-600' },
     { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', icon: '💎', color: 'from-blue-500 to-blue-600' },
     { id: 'claude-4-sonnet', name: 'Claude 4 Sonnet', icon: '🎭', color: 'from-orange-500 to-orange-600' },
-    { id: 'deepseek-v3', name: 'DeepSeek V3', icon: '🔍', color: 'from-cyan-500 to-cyan-600' },
+    { id: 'deepseek-v3', name: 'DeepSeek V3', icon: '🔍', color: 'from-govbr-blue to-govbr-blue-vivid' },
     { id: 'grok-4', name: 'Grok 4', icon: '⚡', color: 'from-gray-700 to-gray-800' },
   ];
 
@@ -62,7 +62,7 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
               <Plus className="w-4 h-4 text-gray-400" />
             </Button>
             <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-[#3a3a3a] rounded-lg">
-              <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-purple-600 rounded flex items-center justify-center text-sm">
+              <div className="w-6 h-6 bg-gradient-to-br from-govbr-blue to-govbr-blue-vivid rounded flex items-center justify-center text-sm">
                 ⚙️
               </div>
               <span className="text-white font-medium">ONE Image</span>
@@ -75,7 +75,7 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
               onClick={() => setActiveTab('texto')}
               className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                 activeTab === 'texto'
-                  ? 'bg-[#3a3a3a] text-white border-b-2 border-cyan-500'
+                  ? 'bg-[#3a3a3a] text-white border-b-2 border-govbr-blue'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -85,7 +85,7 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
               onClick={() => setActiveTab('imagens')}
               className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                 activeTab === 'imagens'
-                  ? 'bg-[#3a3a3a] text-white border-b-2 border-cyan-500'
+                  ? 'bg-[#3a3a3a] text-white border-b-2 border-govbr-blue'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -95,7 +95,7 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
               onClick={() => setActiveTab('experts')}
               className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                 activeTab === 'experts'
-                  ? 'bg-[#3a3a3a] text-white border-b-2 border-cyan-500'
+                  ? 'bg-[#3a3a3a] text-white border-b-2 border-govbr-blue'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
@@ -128,7 +128,7 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
                       }}
                       className={`w-full flex items-center justify-between p-3 rounded-lg transition-all ${
                         selectedModel === model.id
-                          ? 'bg-[#3a3a3a] border border-cyan-500'
+                          ? 'bg-[#3a3a3a] border border-govbr-blue'
                           : 'bg-[#333] hover:bg-[#3a3a3a]'
                       }`}
                     >
@@ -142,12 +142,12 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
                       </div>
                       <div className="flex items-center gap-2">
                         {model.badge === 'most-used' && (
-                          <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 text-xs">
+                          <Badge variant="secondary" className="bg-govbr-blue/20 text-govbr-blue-light text-xs">
                             Mais usado
                           </Badge>
                         )}
                         {model.badge === 'new' && (
-                          <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 text-xs flex items-center gap-1">
+                          <Badge variant="secondary" className="bg-govbr-yellow/20 text-govbr-yellow text-xs flex items-center gap-1">
                             ✨ Novo
                           </Badge>
                         )}
@@ -186,7 +186,7 @@ export function AdvancedModelSelector({ isOpen, onClose, selectedModel, onModelC
                       }}
                       className={`w-full flex items-center justify-between p-3 rounded-lg transition-all ${
                         selectedModel === model.id
-                          ? 'bg-[#3a3a3a] border border-cyan-500'
+                          ? 'bg-[#3a3a3a] border border-govbr-blue'
                           : 'bg-[#333] hover:bg-[#3a3a3a]'
                       }`}
                     >

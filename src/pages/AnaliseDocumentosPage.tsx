@@ -328,7 +328,7 @@ export function AnaliseDocumentosPage() {
                               <Badge className="bg-blue-100 text-blue-800 text-xs">
                                 P: {risco.probabilidade}
                               </Badge>
-                              <Badge className="bg-purple-100 text-purple-800 text-xs">
+                              <Badge className="bg-govbr-yellow/20 text-govbr-blue-dark text-xs">
                                 I: {risco.impacto}
                               </Badge>
                             </div>
