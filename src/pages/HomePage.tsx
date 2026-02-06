@@ -1,7 +1,6 @@
 import { RealDashboard } from '@/components/dashboard/RealDashboard';
 import { IconSidebar } from '@/components/dashboard/IconSidebar';
 import { Sidebar } from '@/components/dashboard/Sidebar';
-import { Toaster } from '@/components/ui/toaster';
 
 export function HomePage() {
   return (
@@ -11,7 +10,6 @@ export function HomePage() {
         <Sidebar />
         <RealDashboard />
       </div>
-      <Toaster />
     </>
   );
 }

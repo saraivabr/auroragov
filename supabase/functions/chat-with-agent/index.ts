@@ -1,35 +1,28 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.45.6";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
-};
+import { createCorsHeaders, getAllowedOriginsFromEnv, handleCorsPreflight } from "../_shared/cors.ts";
+import { requireUser } from "../_shared/auth.ts";
 
 interface ChatRequest {
   conversationId: string;
   message: string;
   agentId?: string;
-  userId: string;
   modelId?: string;
   stream?: boolean;
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: corsHeaders,
-    });
-  }
+  const corsHeaders = createCorsHeaders(req, { allowedOrigins: getAllowedOriginsFromEnv() });
+  const preflight = handleCorsPreflight(req, corsHeaders);
+  if (preflight) return preflight;
 
   try {
-    const { conversationId, message, agentId, userId, modelId, stream = false }: ChatRequest = await req.json();
+    const user = await requireUser(req);
+    const { conversationId, message, agentId, modelId, stream = false }: ChatRequest = await req.json();
 
-    if (!conversationId || !message || !userId) {
+    if (!conversationId || !message) {
       return new Response(
-        JSON.stringify({ error: "conversationId, message e userId são obrigatórios" }),
+        JSON.stringify({ error: "conversationId e message são obrigatórios" }),
         {
           status: 400,
           headers: {
@@ -40,35 +33,81 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    if (stream) {
+      return new Response(
+        JSON.stringify({ error: "stream=true ainda não é suportado neste endpoint" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const openrouterApiKey = Deno.env.get("OPENROUTER_API_KEY");
     const siteUrl = Deno.env.get("OPENROUTER_SITE_URL") || "https://auroragov.com.br";
     const siteName = Deno.env.get("OPENROUTER_SITE_NAME") || "AuroraGov";
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
     if (!openrouterApiKey) {
       throw new Error("OPENROUTER_API_KEY não configurada");
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Use RLS with the authenticated user for most reads/writes.
+    const authHeader = req.headers.get("Authorization") || req.headers.get("authorization") || "";
+    const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+
+    // Admin client only for server-maintained aggregates (usage_stats).
+    const supabaseAdmin = supabaseServiceRoleKey
+      ? createClient(supabaseUrl, supabaseServiceRoleKey, {
+          auth: { persistSession: false, autoRefreshToken: false },
+        })
+      : null;
+
+    // Ensure conversation belongs to this user (prevents guessing UUIDs).
+    const { data: conversation, error: convError } = await supabaseUser
+      .from("conversations")
+      .select("id, user_id")
+      .eq("id", conversationId)
+      .maybeSingle();
+
+    if (convError) {
+      throw new Error(`Erro ao validar conversa: ${convError.message}`);
+    }
+    if (!conversation) {
+      return new Response(JSON.stringify({ error: "Conversa não encontrada" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    if (conversation.user_id !== user.id) {
+      return new Response(JSON.stringify({ error: "Acesso negado" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     let selectedModelId = modelId;
     let agentData = null;
 
     if (agentId) {
-      const { data: agent } = await supabase
+      const { data: agent } = await supabaseUser
         .from("agents")
         .select("*")
         .eq("id", agentId)
-        .single();
+        .maybeSingle();
 
       agentData = agent;
 
       if (!selectedModelId) {
-        const { data: preference } = await supabase
+        const { data: preference } = await supabaseUser
           .from("user_model_preferences")
           .select("preferred_model_id")
-          .eq("user_id", userId)
+          .eq("user_id", user.id)
           .eq("agent_id", agentId)
           .maybeSingle();
 
@@ -80,7 +119,7 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    const { data: modelInfo } = await supabase
+    let { data: modelInfo } = await supabaseUser
       .from("ai_models")
       .select("*")
       .eq("model_id", selectedModelId)
@@ -88,27 +127,23 @@ Deno.serve(async (req: Request) => {
 
     if (!modelInfo || !modelInfo.is_available) {
       selectedModelId = "openai/gpt-4o-mini";
-      const { data: fallbackModel } = await supabase
+      const { data: fallbackModel } = await supabaseUser
         .from("ai_models")
         .select("*")
         .eq("model_id", selectedModelId)
-        .single();
+        .maybeSingle();
 
-      if (fallbackModel) {
-        modelInfo.pricing_input = fallbackModel.pricing_input;
-        modelInfo.pricing_output = fallbackModel.pricing_output;
-        modelInfo.provider = fallbackModel.provider;
-      }
+      modelInfo = fallbackModel ?? modelInfo;
     }
 
-    const { data: userMessage, error: userMessageError } = await supabase
+    const { data: userMessage, error: userMessageError } = await supabaseUser
       .from("messages")
       .insert({
         conversation_id: conversationId,
         agent_id: agentId,
         role: "user",
         content: message,
-        user_id: userId,
+        user_id: user.id,
       })
       .select()
       .single();
@@ -117,7 +152,7 @@ Deno.serve(async (req: Request) => {
       console.error("Error saving user message:", userMessageError);
     }
 
-    const { data: previousMessages } = await supabase
+    const { data: previousMessages } = await supabaseUser
       .from("messages")
       .select("role, content")
       .eq("conversation_id", conversationId)
@@ -151,7 +186,7 @@ Deno.serve(async (req: Request) => {
         messages: conversationHistory,
         max_tokens: agentData?.max_tokens || 2000,
         temperature: agentData?.temperature || 0.7,
-        stream: stream,
+        stream: false,
       }),
     });
 
@@ -172,7 +207,7 @@ Deno.serve(async (req: Request) => {
     const costOutput = modelInfo?.pricing_output ? (tokensOutput / 1_000_000) * modelInfo.pricing_output : 0;
     const totalCost = costInput + costOutput;
 
-    const { data: assistantMessage, error: assistantMessageError } = await supabase
+    const { data: assistantMessage, error: assistantMessageError } = await supabaseUser
       .from("messages")
       .insert({
         conversation_id: conversationId,
@@ -185,7 +220,7 @@ Deno.serve(async (req: Request) => {
         tokens_output: tokensOutput,
         cost_usd: totalCost,
         processing_time_ms: processingTime,
-        user_id: userId,
+        user_id: user.id,
       })
       .select()
       .single();
@@ -196,38 +231,40 @@ Deno.serve(async (req: Request) => {
 
     const today = new Date().toISOString().split('T')[0];
 
-    const { data: existingStats } = await supabase
-      .from("usage_stats")
-      .select("*")
-      .eq("user_id", userId)
-      .eq("agent_id", agentId || null)
-      .eq("model_id", selectedModelId)
-      .eq("date", today)
-      .maybeSingle();
+    if (supabaseAdmin) {
+      const { data: existingStats } = await supabaseAdmin
+        .from("usage_stats")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("agent_id", agentId || null)
+        .eq("model_id", selectedModelId)
+        .eq("date", today)
+        .maybeSingle();
 
-    if (existingStats) {
-      await supabase
-        .from("usage_stats")
-        .update({
-          total_messages: existingStats.total_messages + 1,
-          total_tokens_input: existingStats.total_tokens_input + tokensInput,
-          total_tokens_output: existingStats.total_tokens_output + tokensOutput,
-          total_cost_usd: existingStats.total_cost_usd + totalCost,
-        })
-        .eq("id", existingStats.id);
-    } else {
-      await supabase
-        .from("usage_stats")
-        .insert({
-          user_id: userId,
-          agent_id: agentId,
-          model_id: selectedModelId,
-          date: today,
-          total_messages: 1,
-          total_tokens_input: tokensInput,
-          total_tokens_output: tokensOutput,
-          total_cost_usd: totalCost,
-        });
+      if (existingStats) {
+        await supabaseAdmin
+          .from("usage_stats")
+          .update({
+            total_messages: existingStats.total_messages + 1,
+            total_tokens_input: existingStats.total_tokens_input + tokensInput,
+            total_tokens_output: existingStats.total_tokens_output + tokensOutput,
+            total_cost_usd: existingStats.total_cost_usd + totalCost,
+          })
+          .eq("id", existingStats.id);
+      } else {
+        await supabaseAdmin
+          .from("usage_stats")
+          .insert({
+            user_id: user.id,
+            agent_id: agentId,
+            model_id: selectedModelId,
+            date: today,
+            total_messages: 1,
+            total_tokens_input: tokensInput,
+            total_tokens_output: tokensOutput,
+            total_cost_usd: totalCost,
+          });
+      }
     }
 
     return new Response(
@@ -251,13 +288,14 @@ Deno.serve(async (req: Request) => {
     );
   } catch (error) {
     console.error("Error:", error);
+    const status = typeof error?.status === "number" ? error.status : 500;
     return new Response(
       JSON.stringify({
         error: error.message || "Erro ao processar chat",
         details: error.toString(),
       }),
       {
-        status: 500,
+        status,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",

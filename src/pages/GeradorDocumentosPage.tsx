@@ -13,6 +13,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { exportDocumentToPDF, printDocument } from '@/lib/pdf-generator';
 import { documentTemplates } from '@/data/document-templates';
+import { callEdgeFunction } from '@/lib/edge-functions';
 
 interface Template {
   id: string;
@@ -75,29 +76,18 @@ export function GeradorDocumentosPage() {
     setIsImprovingText(true);
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const result = await callEdgeFunction<{ texto_melhorado: string; tokens_usados?: number }>(
+        'gerador-documentos',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            tipoDocumento,
+            conteudo: corpo,
+            contexto: assunto || 'Documento oficial',
+          }),
+        }
+      );
 
-      const response = await fetch(`${supabaseUrl}/functions/v1/gerador-documentos`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tipoDocumento,
-          conteudo: corpo,
-          contexto: assunto || 'Documento oficial',
-          userId: user?.id || 'anonymous'
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao melhorar texto');
-      }
-
-      const result = await response.json();
       setCorpo(result.texto_melhorado);
 
       toast({

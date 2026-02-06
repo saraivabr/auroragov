@@ -9,6 +9,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Send, BarChart3 } from 'lucide-react';
+import { callEdgeFunction } from '@/lib/edge-functions';
+import { supabase } from '@/lib/supabase';
 
 export default function OpenRouterTestPage() {
   const { user } = useAuth();
@@ -31,28 +33,27 @@ export default function OpenRouterTestPage() {
     setLastTokens(null);
 
     try {
-      const conversationId = crypto.randomUUID();
+      // Create a conversation owned by the authenticated user (required by RLS and server-side validation).
+      const { data: conv, error: convErr } = await supabase
+        .from('conversations')
+        .insert({ user_id: user.id, title: 'Teste OpenRouter' })
+        .select('id')
+        .single();
 
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-with-agent`, {
+      if (convErr || !conv?.id) {
+        throw convErr || new Error('Falha ao criar conversa');
+      }
+
+      const data = await callEdgeFunction<any>('chat-with-agent', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
-          conversationId,
+          conversationId: conv.id,
           message,
-          userId: user.id,
           modelId: selectedModel,
+          stream: false,
         }),
       });
 
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.error || 'Erro ao enviar mensagem');
-      }
-
-      const data = await res.json();
       setResponse(data.response);
       setLastCost(data.cost_usd);
       setLastTokens({

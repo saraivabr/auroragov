@@ -1,32 +1,26 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
-};
+import { createCorsHeaders, getAllowedOriginsFromEnv, handleCorsPreflight } from "../_shared/cors.ts";
+import { requireUser } from "../_shared/auth.ts";
 
 interface AnaliseRequest {
   tipoDocumento: string;
   titulo: string;
   conteudo: string;
-  userId: string;
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: corsHeaders,
-    });
-  }
+  const corsHeaders = createCorsHeaders(req, { allowedOrigins: getAllowedOriginsFromEnv() });
+  const preflight = handleCorsPreflight(req, corsHeaders);
+  if (preflight) return preflight;
 
   try {
-    const { tipoDocumento, titulo, conteudo, userId }: AnaliseRequest = await req.json();
+    await requireUser(req);
 
-    if (!tipoDocumento || !titulo || !conteudo || !userId) {
+    const { tipoDocumento, titulo, conteudo }: AnaliseRequest = await req.json();
+
+    if (!tipoDocumento || !titulo || !conteudo) {
       return new Response(
-        JSON.stringify({ error: "Todos os campos são obrigatórios" }),
+        JSON.stringify({ error: "tipoDocumento, titulo e conteudo são obrigatórios" }),
         {
           status: 400,
           headers: {
@@ -124,13 +118,14 @@ Forneça uma análise completa em formato JSON.`;
     );
   } catch (error) {
     console.error("Erro:", error);
+    const status = typeof error?.status === "number" ? error.status : 500;
     return new Response(
       JSON.stringify({
         error: error.message || "Erro ao analisar documento",
         details: error.toString()
       }),
       {
-        status: 500,
+        status,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",

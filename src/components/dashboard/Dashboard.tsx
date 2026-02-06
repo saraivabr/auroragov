@@ -1,7 +1,6 @@
 import { IconSidebar } from './IconSidebar';
 import { Sidebar } from './Sidebar';
 import { MainContent } from './MainContent';
-import { Toaster } from '@/components/ui/toaster';
 
 export function Dashboard() {
   return (
@@ -11,7 +10,6 @@ export function Dashboard() {
         <Sidebar />
         <MainContent />
       </div>
-      <Toaster />
     </>
   );
 }

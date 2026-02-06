@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/use-toast';
+import { callEdgeFunction } from '@/lib/edge-functions';
 
 interface Consulta {
   id: string;
@@ -61,27 +62,15 @@ export function ConsultaJuridicaPage() {
     setIsLoading(true);
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-      const response = await fetch(`${supabaseUrl}/functions/v1/consulta-juridica`, {
+      const result = await callEdgeFunction<{
+        resposta: string;
+        normas_relacionadas: any[];
+        confiabilidade: string;
+        tokens_usados?: number;
+      }>('consulta-juridica', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          pergunta: userPergunta,
-          userId: user?.id || 'anonymous'
-        })
+        body: JSON.stringify({ pergunta: userPergunta })
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao processar consulta');
-      }
-
-      const result = await response.json();
 
       const { data, error } = await supabase
         .from('consultas_juridicas')

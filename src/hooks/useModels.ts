@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import type { AIModel } from '@/types/openrouter';
+import { callEdgeFunction } from '@/lib/edge-functions';
 
 interface UseModelsOptions {
   provider?: string;
@@ -38,21 +38,16 @@ export function useModels(options: UseModelsOptions = {}): UseModelsReturn {
       if (options.tags) params.append('tags', options.tags.join(','));
       if (options.recommended !== undefined) params.append('recommended', String(options.recommended));
       if (options.available !== undefined) params.append('available', String(options.available));
+      const qs = params.toString();
 
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/get-available-models?${params.toString()}`;
-
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
+      const data = await callEdgeFunction<{
+        models: AIModel[];
+        recommended: AIModel[];
+        grouped_by_provider: Record<string, AIModel[]>;
+      }>('get-available-models', {
+        method: 'GET',
+        path: qs ? `?${qs}` : '',
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch models: ${response.status}`);
-      }
-
-      const data = await response.json();
 
       setModels(data.models || []);
       setRecommended(data.recommended || []);

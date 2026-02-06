@@ -1,11 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.45.6";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
-};
+import { createCorsHeaders, getAllowedOriginsFromEnv, handleCorsPreflight } from "../_shared/cors.ts";
+import { requireUser } from "../_shared/auth.ts";
 
 interface ModelsQueryParams {
   provider?: string;
@@ -15,17 +11,20 @@ interface ModelsQueryParams {
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: corsHeaders,
-    });
-  }
+  const corsHeaders = createCorsHeaders(req, { allowedOrigins: getAllowedOriginsFromEnv() });
+  const preflight = handleCorsPreflight(req, corsHeaders);
+  if (preflight) return preflight;
 
   try {
+    // Require auth, then query through RLS using the user's JWT.
+    await requireUser(req);
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const authHeader = req.headers.get("Authorization") || req.headers.get("authorization") || "";
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
 
     const url = new URL(req.url);
     const provider = url.searchParams.get("provider");
@@ -96,13 +95,14 @@ Deno.serve(async (req: Request) => {
     });
   } catch (error) {
     console.error("Error:", error);
+    const status = typeof error?.status === "number" ? error.status : 500;
     return new Response(
       JSON.stringify({
         error: error.message || "Internal server error",
         details: error.toString(),
       }),
       {
-        status: 500,
+        status,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",
