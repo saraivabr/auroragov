@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import { callEdgeFunction } from '@/lib/edge-functions';
 import { useAuth } from '@/contexts/AuthContext';
-import { AIModel, Message } from '@/types/ai-models';
+import { AIModel, AI_MODELS, Message } from '@/types/ai-models';
 import { useToast } from '@/components/ui/use-toast';
 
 export interface Conversation {
@@ -19,6 +20,16 @@ export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState<AIModel>('chatgpt');
+
+  const normalizeModel = useCallback(
+    (modelId?: string | null): AIModel => {
+      if (modelId && modelId in AI_MODELS) {
+        return modelId as AIModel;
+      }
+      return selectedModel;
+    },
+    [selectedModel],
+  );
 
   useEffect(() => {
     if (user) {
@@ -66,7 +77,7 @@ export function useChat() {
         id: msg.id,
         role: msg.role,
         content: msg.content,
-        model: msg.model_used || selectedModel,
+        model: normalizeModel(msg.model_used),
         timestamp: new Date(msg.created_at),
       }));
 
@@ -140,14 +151,8 @@ export function useChat() {
     setIsLoading(true);
 
     try {
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-with-agent`;
-
-      const response = await fetch(apiUrl, {
+      const result = await callEdgeFunction<any>('chat-with-agent', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
           message: content,
           conversationId: conversationId,
@@ -156,19 +161,11 @@ export function useChat() {
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Erro na resposta da API:', errorData);
-        throw new Error(errorData.error || 'Erro ao processar mensagem');
-      }
-
-      const result = await response.json();
-
       const assistantMessage: Message = {
         id: crypto.randomUUID(),
         role: 'assistant',
         content: result.response || result.message || 'Desculpe, não consegui processar sua mensagem.',
-        model: result.model_used || selectedModel,
+        model: normalizeModel(result.model_used),
         timestamp: new Date(),
       };
 
