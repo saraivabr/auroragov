@@ -6,6 +6,7 @@ import { AnaliseDocumentosPage } from "./pages/AnaliseDocumentosPage";
 import { GeradorDocumentosPage } from "./pages/GeradorDocumentosPage";
 import { GerenciarUsuariosPage } from "./pages/GerenciarUsuariosPage";
 import { OrganizacoesPage } from "./pages/OrganizacoesPage";
+import { AuditoriaEditalPage } from "./pages/AuditoriaEditalPage";
 import OpenRouterTestPage from "./pages/OpenRouterTestPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
@@ -31,6 +32,7 @@ function AppContent() {
       <Route path="/gerar-documentos" element={<ProtectedRoute><AppLayout><GeradorDocumentosPage /></AppLayout></ProtectedRoute>} />
       <Route path="/gerenciar-usuarios" element={<ProtectedRoute allowedRoles={['super_admin', 'gestor']}><AppLayout><GerenciarUsuariosPage /></AppLayout></ProtectedRoute>} />
       <Route path="/organizacoes" element={<ProtectedRoute allowedRoles={['super_admin']}><AppLayout><OrganizacoesPage /></AppLayout></ProtectedRoute>} />
+      <Route path="/auditor-editais" element={<ProtectedRoute><AppLayout><AuditoriaEditalPage /></AppLayout></ProtectedRoute>} />
       <Route path="/openrouter-test" element={<ProtectedRoute><OpenRouterTestPage /></ProtectedRoute>} />
 
       <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />

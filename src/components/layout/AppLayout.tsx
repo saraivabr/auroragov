@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, MessageSquare, Scale, FileSearch, FileText, Users, Building2, LogOut, Menu, X } from 'lucide-react';
+import { Home, MessageSquare, Scale, FileSearch, FileText, Users, Building2, LogOut, Menu, X, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -20,6 +20,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     { icon: Scale, label: 'Consulta Jurídica', path: '/consulta-juridica' },
     { icon: FileSearch, label: 'Análise de Documentos', path: '/analise-documentos' },
     { icon: FileText, label: 'Gerar Documentos', path: '/gerar-documentos' },
+    { icon: ShieldCheck, label: 'Auditor de Editais', path: '/auditor-editais' },
     ...((isSuperAdmin || isGestor) ? [{ icon: Users, label: 'Gerenciar Usuários', path: '/gerenciar-usuarios' }] : []),
     ...(isSuperAdmin ? [{ icon: Building2, label: 'Organizações', path: '/organizacoes' }] : []),
   ];
