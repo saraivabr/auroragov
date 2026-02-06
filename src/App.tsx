@@ -4,6 +4,8 @@ import { HomePage } from "./pages/HomePage";
 import { ConsultaJuridicaPage } from "./pages/ConsultaJuridicaPage";
 import { AnaliseDocumentosPage } from "./pages/AnaliseDocumentosPage";
 import { GeradorDocumentosPage } from "./pages/GeradorDocumentosPage";
+import { GerenciarUsuariosPage } from "./pages/GerenciarUsuariosPage";
+import { OrganizacoesPage } from "./pages/OrganizacoesPage";
 import OpenRouterTestPage from "./pages/OpenRouterTestPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
@@ -27,6 +29,8 @@ function AppContent() {
       <Route path="/consulta-juridica" element={<ProtectedRoute><AppLayout><ConsultaJuridicaPage /></AppLayout></ProtectedRoute>} />
       <Route path="/analise-documentos" element={<ProtectedRoute><AppLayout><AnaliseDocumentosPage /></AppLayout></ProtectedRoute>} />
       <Route path="/gerar-documentos" element={<ProtectedRoute><AppLayout><GeradorDocumentosPage /></AppLayout></ProtectedRoute>} />
+      <Route path="/gerenciar-usuarios" element={<ProtectedRoute allowedRoles={['super_admin', 'gestor']}><AppLayout><GerenciarUsuariosPage /></AppLayout></ProtectedRoute>} />
+      <Route path="/organizacoes" element={<ProtectedRoute allowedRoles={['super_admin']}><AppLayout><OrganizacoesPage /></AppLayout></ProtectedRoute>} />
       <Route path="/openrouter-test" element={<ProtectedRoute><OpenRouterTestPage /></ProtectedRoute>} />
 
       <Route path="*" element={<Navigate to={user ? "/" : "/login"} replace />} />

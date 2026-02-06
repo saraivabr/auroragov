@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Scale, FileSearch, FileText, Home, LogOut, Menu, X, User } from 'lucide-react';
+import { Scale, FileSearch, FileText, Home, LogOut, Menu, X, User, Users, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
@@ -11,14 +11,16 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isSuperAdmin, isGestor } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
     { path: '/consulta-juridica', label: 'Consulta Jurídica', icon: Scale },
     { path: '/analise-documentos', label: 'Análise de Documentos', icon: FileSearch },
-    { path: '/gerar-documentos', label: 'Gerar Documentos', icon: FileText }
+    { path: '/gerar-documentos', label: 'Gerar Documentos', icon: FileText },
+    ...((isSuperAdmin || isGestor) ? [{ path: '/gerenciar-usuarios', label: 'Gerenciar Usuários', icon: Users }] : []),
+    ...(isSuperAdmin ? [{ path: '/organizacoes', label: 'Organizações', icon: Building2 }] : []),
   ];
 
   const handleSignOut = async () => {

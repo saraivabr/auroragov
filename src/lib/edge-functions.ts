@@ -5,7 +5,8 @@ type EdgeFunctionName =
   | "analise-documentos"
   | "gerador-documentos"
   | "chat-with-agent"
-  | "get-available-models";
+  | "get-available-models"
+  | "manage-users";
 
 export async function callEdgeFunction<TResponse>(
   name: EdgeFunctionName,
