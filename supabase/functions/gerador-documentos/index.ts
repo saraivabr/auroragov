@@ -1,32 +1,26 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
-};
+import { createCorsHeaders, getAllowedOriginsFromEnv, handleCorsPreflight } from "../_shared/cors.ts";
+import { requireUser } from "../_shared/auth.ts";
 
 interface GeradorRequest {
   tipoDocumento: string;
   conteudo: string;
   contexto?: string;
-  userId: string;
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: corsHeaders,
-    });
-  }
+  const corsHeaders = createCorsHeaders(req, { allowedOrigins: getAllowedOriginsFromEnv() });
+  const preflight = handleCorsPreflight(req, corsHeaders);
+  if (preflight) return preflight;
 
   try {
-    const { tipoDocumento, conteudo, contexto, userId }: GeradorRequest = await req.json();
+    await requireUser(req);
 
-    if (!tipoDocumento || !conteudo || !userId) {
+    const { tipoDocumento, conteudo, contexto }: GeradorRequest = await req.json();
+
+    if (!tipoDocumento || !conteudo) {
       return new Response(
-        JSON.stringify({ error: "Tipo de documento, conteúdo e userId são obrigatórios" }),
+        JSON.stringify({ error: "tipoDocumento e conteudo são obrigatórios" }),
         {
           status: 400,
           headers: {
@@ -116,13 +110,14 @@ Por favor, melhore este texto seguindo as normas de redação oficial brasileira
     );
   } catch (error) {
     console.error("Erro:", error);
+    const status = typeof error?.status === "number" ? error.status : 500;
     return new Response(
       JSON.stringify({
         error: error.message || "Erro ao gerar documento",
         details: error.toString()
       }),
       {
-        status: 500,
+        status,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",

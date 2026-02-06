@@ -1,30 +1,25 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
-};
+import { createCorsHeaders, getAllowedOriginsFromEnv, handleCorsPreflight } from "../_shared/cors.ts";
+import { requireUser } from "../_shared/auth.ts";
 
 interface ConsultaRequest {
   pergunta: string;
-  userId: string;
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: corsHeaders,
-    });
-  }
+  const corsHeaders = createCorsHeaders(req, { allowedOrigins: getAllowedOriginsFromEnv() });
+  const preflight = handleCorsPreflight(req, corsHeaders);
+  if (preflight) return preflight;
 
   try {
-    const { pergunta, userId }: ConsultaRequest = await req.json();
+    // Require an authenticated Supabase user for production safety.
+    await requireUser(req);
 
-    if (!pergunta || !userId) {
+    const { pergunta }: ConsultaRequest = await req.json();
+
+    if (!pergunta) {
       return new Response(
-        JSON.stringify({ error: "Pergunta e userId são obrigatórios" }),
+        JSON.stringify({ error: "Pergunta é obrigatória" }),
         {
           status: 400,
           headers: {
@@ -134,13 +129,14 @@ IMPORTANTE: Sempre informe que esta é uma orientação geral e que para casos e
     );
   } catch (error) {
     console.error("Erro:", error);
+    const status = typeof error?.status === "number" ? error.status : 500;
     return new Response(
       JSON.stringify({
         error: error.message || "Erro ao processar consulta",
         details: error.toString()
       }),
       {
-        status: 500,
+        status,
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",

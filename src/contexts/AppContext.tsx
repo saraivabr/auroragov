@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AIModel, Message, AuditEntry, PromptTemplate } from '@/types/ai-models';
+import { callEdgeFunction } from '@/lib/edge-functions';
 
 interface TemplateUsage {
   templateId: string;
@@ -123,27 +124,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-      // Use the consulta-juridica edge function for general queries
-      const response = await fetch(`${supabaseUrl}/functions/v1/consulta-juridica`, {
+      const result = await callEdgeFunction<{ resposta?: string }>('consulta-juridica', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          pergunta: content,
-          userId: 'chat-user'
-        })
+        body: JSON.stringify({ pergunta: content }),
       });
-
-      if (!response.ok) {
-        throw new Error('Erro ao processar mensagem');
-      }
-
-      const result = await response.json();
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),

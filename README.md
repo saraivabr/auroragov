@@ -107,10 +107,37 @@ VITE_SUPABASE_URL=sua_url_supabase
 VITE_SUPABASE_ANON_KEY=sua_chave_anonima_supabase
 SUPABASE_PROJECT_ID=id_do_projeto
 
-# OpenAI (usada nas Edge Functions)
-OPENAI_API_KEY=sua_chave_openai
-VITE_OPENAI_MODEL=gpt-4o-mini
+# (Opcional) Base path do deploy SPA (quando não estiver em "/")
+VITE_BASE_PATH=/
 ```
+
+### Secrets das Edge Functions (Supabase)
+
+As Edge Functions rodam no ambiente do Supabase e precisam de secrets configurados (não ficam no `.env` do frontend).
+
+Secrets mínimos:
+
+```env
+SUPABASE_URL=sua_url_supabase
+SUPABASE_ANON_KEY=sua_chave_anonima_supabase
+
+# CORS: lista de origens permitidas (separadas por vírgula)
+# Ex: https://auroragov.com.br,https://www.auroragov.com.br
+ALLOWED_ORIGINS=https://seu-dominio
+
+# IA
+OPENAI_API_KEY=sua_chave_openai
+OPENROUTER_API_KEY=sua_chave_openrouter
+```
+
+Opcional (recomendado para OpenRouter):
+
+```env
+OPENROUTER_SITE_URL=https://seu-dominio
+OPENROUTER_SITE_NAME=AuroraGov
+```
+
+Observação: se `ALLOWED_ORIGINS` não estiver definido, as functions permitem apenas `http://localhost:5173` e `http://127.0.0.1:5173` (fallback de dev).
 
 ## Instalação e Configuração
 
