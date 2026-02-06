@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Plus, Search, MessageSquare, Settings, HelpCircle, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Search, MessageSquare, LogOut, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,6 +10,7 @@ import { cn } from '@/lib/utils';
 
 export function Sidebar() {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const {
     conversations,
@@ -150,24 +152,20 @@ export function Sidebar() {
       </ScrollArea>
 
       <div className="p-2 border-t border-gray-800 space-y-1">
-        <button
-          onClick={() => signOut()}
-          className="w-full flex items-center gap-3 px-3 py-2 text-gray-400 hover:bg-gray-800 rounded-lg transition-colors"
-        >
+        <div className="w-full flex items-center gap-3 px-3 py-2 text-gray-400">
           <div className="w-6 h-6 rounded-full bg-gradient-to-br from-govbr-blue to-govbr-blue-warm flex items-center justify-center">
             <span className="text-white text-xs font-bold">
               {user?.email?.[0].toUpperCase()}
             </span>
           </div>
           <span className="text-sm truncate">{user?.email}</span>
-        </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-400 hover:bg-gray-800 rounded-lg transition-colors">
-          <Settings className="w-4 h-4" />
-          <span className="text-sm">Configurações</span>
-        </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-400 hover:bg-gray-800 rounded-lg transition-colors">
-          <HelpCircle className="w-4 h-4" />
-          <span className="text-sm">Ajuda</span>
+        </div>
+        <button
+          onClick={async () => { await signOut(); navigate('/login'); }}
+          className="w-full flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-red-400 hover:bg-gray-800 rounded-lg transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="text-sm">Sair</span>
         </button>
       </div>
     </div>

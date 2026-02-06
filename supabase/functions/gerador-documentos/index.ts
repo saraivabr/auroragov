@@ -31,10 +31,12 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
-    if (!openaiApiKey) {
-      throw new Error("OPENAI_API_KEY não configurada");
+    const openrouterApiKey = Deno.env.get("OPENROUTER_API_KEY");
+    if (!openrouterApiKey) {
+      throw new Error("OPENROUTER_API_KEY não configurada");
     }
+    const siteUrl = Deno.env.get("OPENROUTER_SITE_URL") || "https://gov.escreve.ai";
+    const siteName = Deno.env.get("OPENROUTER_SITE_NAME") || "AuroraGov";
 
     const systemPrompt = `Você é um especialista em redação oficial do governo brasileiro, seguindo as normas do Manual de Redação da Presidência da República.
 
@@ -70,14 +72,16 @@ ${conteudo}
 
 Por favor, melhore este texto seguindo as normas de redação oficial brasileira. Retorne apenas o texto melhorado, sem explicações adicionais.`;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${openaiApiKey}`,
+        "Authorization": `Bearer ${openrouterApiKey}`,
         "Content-Type": "application/json",
+        "HTTP-Referer": siteUrl,
+        "X-Title": siteName,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "openai/gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }
@@ -89,8 +93,8 @@ Por favor, melhore este texto seguindo as normas de redação oficial brasileira
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Erro OpenAI:", errorData);
-      throw new Error(`OpenAI API error: ${response.status}`);
+      console.error("Erro OpenRouter:", errorData);
+      throw new Error(`OpenRouter API error: ${response.status}`);
     }
 
     const data = await response.json();
