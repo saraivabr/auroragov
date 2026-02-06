@@ -4,6 +4,17 @@ import { Plus, Search, MessageSquare, LogOut, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { useChat } from '@/hooks/useChat';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -135,13 +146,35 @@ export function Sidebar() {
                         <MessageSquare className="w-4 h-4 flex-shrink-0" />
                         <span className="text-sm truncate">{conv.title}</span>
                       </button>
-                      <button
-                        onClick={() => deleteConversation(conv.id)}
-                        className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded transition-all"
-                        title="Excluir conversa"
-                      >
-                        <Trash2 className="w-3 h-3 text-red-400" />
-                      </button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button
+                            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded transition-all"
+                            title="Excluir conversa"
+                          >
+                            <Trash2 className="w-3 h-3 text-red-400" />
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-gray-900 border-gray-700">
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-white">Excluir conversa?</AlertDialogTitle>
+                            <AlertDialogDescription className="text-gray-400">
+                              Esta ação não pode ser desfeita. A conversa "{conv.title}" e todas as suas mensagens serão permanentemente excluídas.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel className="bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700 hover:text-white">
+                              Cancelar
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => deleteConversation(conv.id)}
+                              className="bg-red-600 hover:bg-red-700 text-white"
+                            >
+                              Excluir
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   ))}
                 </div>

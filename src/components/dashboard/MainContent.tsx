@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { useChat } from '@/hooks/useChat';
 import { ChatInterface } from './ChatInterface';
-import { MessageSquare, Languages, FileText, Newspaper, Send, Loader2 } from 'lucide-react';
+import { MessageSquare, Languages, FileText, Newspaper, Send, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ChevronDown } from 'lucide-react';
-import { AI_MODELS } from '@/types/ai-models';
+import { AIModel, AI_MODELS } from '@/types/ai-models';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface SuggestionCard {
   id: string;
@@ -76,18 +82,50 @@ export function MainContent() {
   };
 
   const currentModel = AI_MODELS[selectedModel];
+  const modelEntries = Object.values(AI_MODELS);
 
   return (
     <div className="flex-1 flex flex-col bg-govbr-blue-dark">
       <div className="border-b border-govbr-blue-light/20 px-6 py-4">
         <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            className="bg-[#0A1628]/60 border-govbr-blue-light/20 hover:bg-[#0A1628]/80 text-white"
-          >
-            <span className="font-medium">{currentModel.name}</span>
-            <ChevronDown className="ml-2 h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="bg-[#0A1628]/60 border-govbr-blue-light/20 hover:bg-[#0A1628]/80 text-white"
+              >
+                <div
+                  className="w-2 h-2 rounded-full mr-2"
+                  style={{ backgroundColor: currentModel.color }}
+                />
+                <span className="font-medium">{currentModel.name}</span>
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-gray-900 border-gray-700 min-w-[220px]">
+              {modelEntries.map((model) => (
+                <DropdownMenuItem
+                  key={model.id}
+                  onClick={() => setSelectedModel(model.id)}
+                  className="text-gray-300 hover:text-white focus:text-white hover:bg-gray-800 focus:bg-gray-800 cursor-pointer"
+                >
+                  <div className="flex items-center gap-3 w-full">
+                    <div
+                      className="w-2 h-2 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: model.color }}
+                    />
+                    <div className="flex-1">
+                      <div className="font-medium">{model.name}</div>
+                      <div className="text-xs text-gray-500">{model.specialty}</div>
+                    </div>
+                    {selectedModel === model.id && (
+                      <Check className="w-4 h-4 text-govbr-yellow" />
+                    )}
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <span className="text-gray-400 text-sm">{currentModel.specialty}</span>
         </div>
       </div>
@@ -99,7 +137,7 @@ export function MainContent() {
               O que você precisa fazer agora?
             </h2>
 
-            <div className="grid grid-cols-2 gap-4 w-full max-w-3xl mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl mb-8">
               {suggestions.map((suggestion) => (
                 <button
                   key={suggestion.id}

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { AIModel, Message, AuditEntry, PromptTemplate } from '@/types/ai-models';
+import { AIModel, Message, AuditEntry, PromptTemplate, DEFAULT_MODEL } from '@/types/ai-models';
 import { callEdgeFunction } from '@/lib/edge-functions';
 
 interface TemplateUsage {
@@ -48,7 +48,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Check if user has completed onboarding
   const hasCompletedOnboarding = localStorage.getItem('auroragov_onboarding_completed') === 'true';
   
-  const [selectedModel, setSelectedModel] = useState<AIModel>('chatgpt');
+  const [selectedModel, setSelectedModel] = useState<AIModel>(DEFAULT_MODEL);
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem('auroragov_messages');
     try {

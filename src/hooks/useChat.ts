@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { callEdgeFunction } from '@/lib/edge-functions';
 import { useAuth } from '@/contexts/AuthContext';
-import { AIModel, AI_MODELS, Message } from '@/types/ai-models';
+import { AIModel, AI_MODELS, DEFAULT_MODEL, Message } from '@/types/ai-models';
 import { useToast } from '@/components/ui/use-toast';
 
 export interface Conversation {
@@ -19,7 +19,7 @@ export function useChat() {
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<AIModel>('chatgpt');
+  const [selectedModel, setSelectedModel] = useState<AIModel>(DEFAULT_MODEL);
 
   const normalizeModel = useCallback(
     (modelId?: string | null): AIModel => {

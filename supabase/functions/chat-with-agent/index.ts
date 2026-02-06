@@ -11,6 +11,55 @@ interface ChatRequest {
   stream?: boolean;
 }
 
+// Free models fallback order
+const FREE_MODELS = [
+  "google/gemini-2.0-flash-exp:free",
+  "deepseek/deepseek-r1:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "qwen/qwen-2.5-72b-instruct:free",
+];
+
+async function callOpenRouter(
+  apiKey: string,
+  modelId: string,
+  messages: Array<{ role: string; content: string }>,
+  siteUrl: string,
+  siteName: string,
+  maxTokens: number,
+  temperature: number,
+): Promise<{ ok: boolean; data?: any; error?: string }> {
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": siteUrl,
+        "X-Title": siteName,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: modelId,
+        messages,
+        max_tokens: maxTokens,
+        temperature,
+        stream: false,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error(`Model ${modelId} failed:`, errorData);
+      return { ok: false, error: `${response.status}: ${JSON.stringify(errorData)}` };
+    }
+
+    const data = await response.json();
+    return { ok: true, data };
+  } catch (err) {
+    console.error(`Model ${modelId} error:`, err);
+    return { ok: false, error: err.message };
+  }
+}
+
 Deno.serve(async (req: Request) => {
   const corsHeaders = createCorsHeaders(req, { allowedOrigins: getAllowedOriginsFromEnv() });
   const preflight = handleCorsPreflight(req, corsHeaders);
@@ -54,21 +103,19 @@ Deno.serve(async (req: Request) => {
       throw new Error("OPENROUTER_API_KEY não configurada");
     }
 
-    // Use RLS with the authenticated user for most reads/writes.
     const authHeader = req.headers.get("Authorization") || req.headers.get("authorization") || "";
     const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
-    // Admin client only for server-maintained aggregates (usage_stats).
     const supabaseAdmin = supabaseServiceRoleKey
       ? createClient(supabaseUrl, supabaseServiceRoleKey, {
           auth: { persistSession: false, autoRefreshToken: false },
         })
       : null;
 
-    // Ensure conversation belongs to this user (prevents guessing UUIDs).
+    // Ensure conversation belongs to this user
     const { data: conversation, error: convError } = await supabaseUser
       .from("conversations")
       .select("id, user_id")
@@ -91,7 +138,7 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    let selectedModelId = modelId;
+    let selectedModelId = modelId || FREE_MODELS[0];
     let agentData = null;
 
     if (agentId) {
@@ -103,7 +150,7 @@ Deno.serve(async (req: Request) => {
 
       agentData = agent;
 
-      if (!selectedModelId) {
+      if (!modelId) {
         const { data: preference } = await supabaseUser
           .from("user_model_preferences")
           .select("preferred_model_id")
@@ -111,32 +158,12 @@ Deno.serve(async (req: Request) => {
           .eq("agent_id", agentId)
           .maybeSingle();
 
-        selectedModelId = preference?.preferred_model_id || agent?.default_model_id || "openai/gpt-4o-mini";
-      }
-    } else {
-      if (!selectedModelId) {
-        selectedModelId = "openai/gpt-4o-mini";
+        selectedModelId = preference?.preferred_model_id || agent?.default_model_id || FREE_MODELS[0];
       }
     }
 
-    let { data: modelInfo } = await supabaseUser
-      .from("ai_models")
-      .select("*")
-      .eq("model_id", selectedModelId)
-      .maybeSingle();
-
-    if (!modelInfo || !modelInfo.is_available) {
-      selectedModelId = "openai/gpt-4o-mini";
-      const { data: fallbackModel } = await supabaseUser
-        .from("ai_models")
-        .select("*")
-        .eq("model_id", selectedModelId)
-        .maybeSingle();
-
-      modelInfo = fallbackModel ?? modelInfo;
-    }
-
-    const { data: userMessage, error: userMessageError } = await supabaseUser
+    // Save user message
+    const { error: userMessageError } = await supabaseUser
       .from("messages")
       .insert({
         conversation_id: conversationId,
@@ -152,6 +179,7 @@ Deno.serve(async (req: Request) => {
       console.error("Error saving user message:", userMessageError);
     }
 
+    // Build conversation history
     const { data: previousMessages } = await supabaseUser
       .from("messages")
       .select("role, content")
@@ -167,8 +195,6 @@ Deno.serve(async (req: Request) => {
       }))
       .filter((m: any) => allowedRoles.has(m.role) && m.content.trim().length > 0);
 
-    // Ensure the OpenRouter request always has at least one user message.
-    // Some providers reject empty messages arrays.
     const last = conversationHistory[conversationHistory.length - 1];
     if (!last || last.role !== "user" || last.content !== message) {
       conversationHistory.push({ role: "user", content: message });
@@ -182,41 +208,46 @@ Deno.serve(async (req: Request) => {
     }
 
     const startTime = Date.now();
+    const maxTokens = agentData?.max_tokens || 2000;
+    const temperature = agentData?.temperature || 0.7;
 
-    const openrouterResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${openrouterApiKey}`,
-        "HTTP-Referer": siteUrl,
-        "X-Title": siteName,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: selectedModelId,
-        messages: conversationHistory,
-        max_tokens: agentData?.max_tokens || 2000,
-        temperature: agentData?.temperature || 0.7,
-        stream: false,
-      }),
-    });
+    // Try the selected model first, then fallback through free models
+    const modelsToTry = [selectedModelId, ...FREE_MODELS.filter(m => m !== selectedModelId)];
+    let responseData = null;
+    let actualModelUsed = selectedModelId;
 
-    if (!openrouterResponse.ok) {
-      const errorData = await openrouterResponse.json();
-      console.error("OpenRouter API error:", errorData);
-      throw new Error(`OpenRouter API error: ${openrouterResponse.status} - ${JSON.stringify(errorData)}`);
+    for (const tryModelId of modelsToTry) {
+      const result = await callOpenRouter(
+        openrouterApiKey,
+        tryModelId,
+        conversationHistory,
+        siteUrl,
+        siteName,
+        maxTokens,
+        temperature,
+      );
+
+      if (result.ok && result.data) {
+        responseData = result.data;
+        actualModelUsed = tryModelId;
+        break;
+      }
+
+      console.warn(`Fallback: model ${tryModelId} failed, trying next...`);
     }
 
-    const responseData = await openrouterResponse.json();
+    if (!responseData) {
+      throw new Error("Todos os modelos falharam. Tente novamente mais tarde.");
+    }
+
     const processingTime = Date.now() - startTime;
 
     const assistantResponse = responseData.choices[0].message.content;
     const tokensInput = responseData.usage?.prompt_tokens || 0;
     const tokensOutput = responseData.usage?.completion_tokens || 0;
+    const totalCost = 0; // Free models
 
-    const costInput = modelInfo?.pricing_input ? (tokensInput / 1_000_000) * modelInfo.pricing_input : 0;
-    const costOutput = modelInfo?.pricing_output ? (tokensOutput / 1_000_000) * modelInfo.pricing_output : 0;
-    const totalCost = costInput + costOutput;
-
+    // Save assistant message
     const { data: assistantMessage, error: assistantMessageError } = await supabaseUser
       .from("messages")
       .insert({
@@ -224,8 +255,8 @@ Deno.serve(async (req: Request) => {
         agent_id: agentId,
         role: "assistant",
         content: assistantResponse,
-        model_used: selectedModelId,
-        model_provider: modelInfo?.provider || "unknown",
+        model_used: actualModelUsed,
+        model_provider: actualModelUsed.split("/")[0],
         tokens_input: tokensInput,
         tokens_output: tokensOutput,
         cost_usd: totalCost,
@@ -239,6 +270,7 @@ Deno.serve(async (req: Request) => {
       console.error("Error saving assistant message:", assistantMessageError);
     }
 
+    // Update usage stats
     const today = new Date().toISOString().split('T')[0];
 
     if (supabaseAdmin) {
@@ -246,8 +278,7 @@ Deno.serve(async (req: Request) => {
         .from("usage_stats")
         .select("*")
         .eq("user_id", user.id)
-        .eq("agent_id", agentId || null)
-        .eq("model_id", selectedModelId)
+        .eq("model_id", actualModelUsed)
         .eq("date", today)
         .maybeSingle();
 
@@ -267,7 +298,7 @@ Deno.serve(async (req: Request) => {
           .insert({
             user_id: user.id,
             agent_id: agentId,
-            model_id: selectedModelId,
+            model_id: actualModelUsed,
             date: today,
             total_messages: 1,
             total_tokens_input: tokensInput,
@@ -281,8 +312,8 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         message: assistantMessage,
         response: assistantResponse,
-        model_used: selectedModelId,
-        model_provider: modelInfo?.provider,
+        model_used: actualModelUsed,
+        model_provider: actualModelUsed.split("/")[0],
         tokens_input: tokensInput,
         tokens_output: tokensOutput,
         total_tokens: tokensInput + tokensOutput,

@@ -14,16 +14,15 @@ interface ComparisonModeProps {
 export function ComparisonMode({ onClose }: ComparisonModeProps) {
   const [prompt, setPrompt] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<Record<AIModel, string>>({} as Record<AIModel, string>);
+  const [results, setResults] = useState<Record<string, string>>({});
 
   const handleCompare = async () => {
     if (!prompt.trim()) return;
 
     setIsLoading(true);
-    setResults({} as Record<AIModel, string>);
+    setResults({});
 
-    // Simulate API calls to different models
-    const models: AIModel[] = ['chatgpt', 'claude', 'gemini', 'deepseek'];
+    const models = Object.keys(AI_MODELS) as AIModel[];
     
     for (const model of models) {
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -96,7 +95,7 @@ export function ComparisonMode({ onClose }: ComparisonModeProps) {
               </div>
             </div>
           ) : (
-            <Tabs defaultValue="chatgpt" className="h-full flex flex-col">
+            <Tabs defaultValue={Object.keys(AI_MODELS)[0]} className="h-full flex flex-col">
               <TabsList className="mx-6 mt-6 bg-gray-900/50 border border-gray-700">
                 {(Object.keys(AI_MODELS) as AIModel[]).map((modelId) => (
                   <TabsTrigger

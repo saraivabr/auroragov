@@ -6,6 +6,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { AIModel, AI_MODELS, Message } from '@/types/ai-models';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatInterfaceProps {
   selectedModel: AIModel;
@@ -16,7 +18,6 @@ interface ChatInterfaceProps {
   onPromptChange: (value: string) => void;
 }
 
-// Memoized message component to prevent unnecessary re-renders
 const MessageItem = memo(({ message }: { message: Message }) => {
   const isUser = message.role === 'user';
   const modelInfo = AI_MODELS[message.model];
@@ -29,9 +30,9 @@ const MessageItem = memo(({ message }: { message: Message }) => {
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-white">
-            {isUser ? 'Você' : modelInfo.name}
+            {isUser ? 'Você' : modelInfo?.name || 'Assistente'}
           </span>
-          {!isUser && (
+          {!isUser && modelInfo && (
             <Badge variant="outline" className="text-xs border-govbr-yellow/50 text-govbr-yellow">
               {modelInfo.specialty}
             </Badge>
@@ -44,9 +45,28 @@ const MessageItem = memo(({ message }: { message: Message }) => {
           })}
         </span>
       </div>
-      <div className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
-        {message.content}
-      </div>
+      {isUser ? (
+        <div className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
+          {message.content}
+        </div>
+      ) : (
+        <div className="text-sm text-gray-300 leading-relaxed prose prose-invert prose-sm max-w-none
+          prose-headings:text-white prose-headings:font-semibold
+          prose-p:text-gray-300 prose-p:leading-relaxed
+          prose-strong:text-white
+          prose-code:text-govbr-yellow prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs
+          prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700 prose-pre:rounded-lg
+          prose-li:text-gray-300
+          prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
+          prose-table:border-collapse
+          prose-th:border prose-th:border-gray-700 prose-th:bg-gray-800 prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:text-white
+          prose-td:border prose-td:border-gray-700 prose-td:px-3 prose-td:py-2
+        ">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {message.content}
+          </ReactMarkdown>
+        </div>
+      )}
     </div>
   );
 });
@@ -84,52 +104,33 @@ export const ChatInterface = memo(function ChatInterface({
     }
   };
 
+  const modelInfo = AI_MODELS[selectedModel];
+
   return (
     <div className="flex flex-col h-full">
-      {/* Messages Area */}
       <ScrollArea className="flex-1 px-6 py-4" ref={scrollRef}>
-        {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center space-y-4 max-w-md">
-              <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-govbr-blue to-govbr-blue-vivid flex items-center justify-center">
-                <div className="w-10 h-10 border-2 border-white rounded-full relative">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full"></div>
-                </div>
+        <div className="space-y-6">
+          {messages.map((message) => (
+            <MessageItem key={message.id} message={message} />
+          ))}
+          {isLoading && (
+            <div className="p-4 rounded-lg bg-gray-800/30 animate-in slide-in-from-bottom-2">
+              <div className="flex items-center gap-2 mb-2">
+                {modelInfo && (
+                  <Badge variant="outline" className="text-xs border-govbr-yellow/50 text-govbr-yellow">
+                    {modelInfo.name}
+                  </Badge>
+                )}
               </div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Bem-vindo ao Aurora Gov
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  Selecione um template ou digite sua solicitação para começar.
-                  Todos os comandos são registrados e auditáveis.
-                </p>
+              <div className="flex items-center gap-2 text-gray-400">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">Processando...</span>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {messages.map((message) => (
-              <MessageItem key={message.id} message={message} />
-            ))}
-            {isLoading && (
-              <div className="p-4 rounded-lg bg-gray-800/30 animate-in slide-in-from-bottom-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge variant="outline" className="text-xs border-govbr-yellow/50 text-govbr-yellow">
-                    {AI_MODELS[selectedModel].name}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-2 text-gray-400">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm">Processando...</span>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </ScrollArea>
 
-      {/* Input Area */}
       <div className="border-t border-govbr-blue-light/20 bg-[#0A1628]/80 backdrop-blur-md p-6">
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="relative">
@@ -138,7 +139,7 @@ export const ChatInterface = memo(function ChatInterface({
               value={promptValue}
               onChange={(e) => onPromptChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Digite sua solicitação ou selecione um template..."
+              placeholder="Digite sua solicitação..."
               className="min-h-[100px] resize-none bg-gray-900/50 border-gray-700 focus:border-govbr-yellow text-white placeholder:text-gray-500"
               disabled={isLoading}
             />

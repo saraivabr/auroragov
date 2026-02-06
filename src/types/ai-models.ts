@@ -1,4 +1,4 @@
-export type AIModel = 'chatgpt' | 'claude' | 'gemini' | 'deepseek';
+export type AIModel = 'google/gemini-2.0-flash-exp:free' | 'deepseek/deepseek-r1:free' | 'meta-llama/llama-3.3-70b-instruct:free' | 'qwen/qwen-2.5-72b-instruct:free';
 
 export interface AIModelInfo {
   id: AIModel;
@@ -8,31 +8,41 @@ export interface AIModelInfo {
 }
 
 export const AI_MODELS: Record<AIModel, AIModelInfo> = {
-  chatgpt: {
-    id: 'chatgpt',
-    name: 'ChatGPT',
-    specialty: 'Análise Geral',
-    color: '#10A37F'
-  },
-  claude: {
-    id: 'claude',
-    name: 'Claude',
-    specialty: 'Redação Técnica',
-    color: '#D97757'
-  },
-  gemini: {
-    id: 'gemini',
+  'google/gemini-2.0-flash-exp:free': {
+    id: 'google/gemini-2.0-flash-exp:free',
     name: 'Gemini',
-    specialty: 'Pesquisa & Dados',
+    specialty: 'Análise Geral',
     color: '#4285F4'
   },
-  deepseek: {
-    id: 'deepseek',
+  'deepseek/deepseek-r1:free': {
+    id: 'deepseek/deepseek-r1:free',
     name: 'DeepSeek',
-    specialty: 'Análise Jurídica',
+    specialty: 'Raciocínio Avançado',
     color: '#7C3AED'
+  },
+  'meta-llama/llama-3.3-70b-instruct:free': {
+    id: 'meta-llama/llama-3.3-70b-instruct:free',
+    name: 'Llama',
+    specialty: 'Texto & Código',
+    color: '#0668E1'
+  },
+  'qwen/qwen-2.5-72b-instruct:free': {
+    id: 'qwen/qwen-2.5-72b-instruct:free',
+    name: 'Qwen',
+    specialty: 'Análise Jurídica',
+    color: '#6366F1'
   }
 };
+
+export const DEFAULT_MODEL: AIModel = 'google/gemini-2.0-flash-exp:free';
+
+// Fallback order for when a model fails
+export const MODEL_FALLBACK_ORDER: AIModel[] = [
+  'google/gemini-2.0-flash-exp:free',
+  'deepseek/deepseek-r1:free',
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'qwen/qwen-2.5-72b-instruct:free',
+];
 
 export interface Message {
   id: string;
