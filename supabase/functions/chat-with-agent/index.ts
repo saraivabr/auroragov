@@ -159,10 +159,20 @@ Deno.serve(async (req: Request) => {
       .order("created_at", { ascending: true })
       .limit(20);
 
-    const conversationHistory = previousMessages?.map((msg: any) => ({
-      role: msg.role,
-      content: msg.content,
-    })) || [];
+    const allowedRoles = new Set(["system", "user", "assistant"]);
+    const conversationHistory = (previousMessages || [])
+      .map((msg: any) => ({
+        role: String(msg?.role || ""),
+        content: String(msg?.content || ""),
+      }))
+      .filter((m: any) => allowedRoles.has(m.role) && m.content.trim().length > 0);
+
+    // Ensure the OpenRouter request always has at least one user message.
+    // Some providers reject empty messages arrays.
+    const last = conversationHistory[conversationHistory.length - 1];
+    if (!last || last.role !== "user" || last.content !== message) {
+      conversationHistory.push({ role: "user", content: message });
+    }
 
     if (agentData?.system_prompt) {
       conversationHistory.unshift({
